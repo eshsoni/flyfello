@@ -1,0 +1,6 @@
+{
+  "name": "Flyfello - USA & Canada to India Flight Specialists",
+  "description": "Book discounted flights from USA & Canada to India with Flyfello. Real-time flight search, exclusive consolidated fares, 2x 23kg baggage, instant WhatsApp booking, EMI options, and 24/7 dedicated travel support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

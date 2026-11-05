@@ -1,0 +1,88 @@
+import { Testimonial } from '../types';
+
+export const TESTIMONIALS: Testimonial[] = [
+  {
+    id: 'test-1',
+    name: 'Gurpreet & Simran Dhillon',
+    location: 'Surrey, BC, Canada',
+    route: 'Vancouver (YVR) ⇄ Amritsar (ATQ)',
+    airline: 'Qatar Airways (Family of 4)',
+    date: 'Travelled October 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80',
+    category: 'Family',
+    content:
+      'We were booking flights for our whole family of four to attend a cousin\'s wedding in Punjab during Diwali season. Online portals were quoting over $2,100 CAD per ticket with only 1 piece of luggage. We contacted Flyfello on WhatsApp, and within 20 minutes they secured us Qatar Airways tickets at $1,540 CAD each with 2 full 23kg bags per person plus baby stroller allowance. Saved our family over $2,200 CAD!',
+    highlight: 'Saved $2,240 CAD for family of 4 with 2x 23kg luggage included',
+  },
+  {
+    id: 'test-2',
+    name: 'Rohan Mehta',
+    location: 'Brampton, ON, Canada',
+    route: 'Toronto (YYZ) ⇄ Ahmedabad (AMD)',
+    airline: 'Emirates',
+    date: 'Travelled September 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80',
+    category: 'Student',
+    content:
+      'As an international university student heading home between co-op terms, price and luggage were my two biggest worries. Flyfello arranged an exclusive student fare with Emirates and ensured my 2 bags of 23kg were honored seamlessly. Payment via Interac e-Transfer made it effortless with zero credit card foreign fees. Flyfello is my go-to for all trips home.',
+    highlight: 'Full 2-piece baggage guaranteed + zero-fee Interac e-Transfer payment',
+  },
+  {
+    id: 'test-3',
+    name: 'Dr. Priya Sundaram',
+    location: 'San Jose / Bay Area, CA, USA',
+    route: 'San Francisco (SFO) ⇄ Bengaluru (BLR)',
+    airline: 'Air India Non-Stop',
+    date: 'Travelled August 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=160&q=80',
+    category: 'Business',
+    content:
+      'I fly to Bangalore twice a year for tech advisory meetings. The 17-hour non-stop flight can be brutal if seats aren\'t chosen properly. Flyfello not only got me a discounted corporate rate $380 cheaper than Google Flights, but also pre-assigned my preferred aisle bulkhead seat and confirmed special Jain meals for both directions. Genuine concierge service.',
+    highlight: 'Saved $380 USD on non-stop flight + seamless seat selection',
+  },
+  {
+    id: 'test-4',
+    name: 'Harpreet Singh Sandhu',
+    location: 'Calgary, AB, Canada',
+    route: 'Calgary (YYC) ⇄ Delhi (DEL)',
+    airline: 'Air Canada + Air India',
+    date: 'Travelled October 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=160&q=80',
+    category: 'Last Minute',
+    content:
+      'Had an urgent family medical emergency in Ludhiana and needed to fly out the very next evening. Most commercial websites had skyrocketed to $3,200 CAD for next-day departures. I reached Flyfello via their WhatsApp number at 11:30 PM. The agent answered immediately, locked an emergency consolidated seat for $1,680 CAD, and sent my ticket PDF before midnight. Truly life-saving support.',
+    highlight: 'Late-night 11:30 PM emergency ticket booked & issued within 25 minutes',
+  },
+  {
+    id: 'test-5',
+    name: 'Ananya & Amit Verma',
+    location: 'Dallas / Fort Worth, TX, USA',
+    route: 'Dallas (DFW) ⇄ Mumbai (BOM)',
+    airline: 'Lufthansa',
+    date: 'Travelled July 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=160&q=80',
+    category: 'Family',
+    content:
+      'Travelling with elderly parents who require wheelchair assistance at Frankfurt transit can be stressful. Flyfello took care of all SSR (special service requests) during booking. Both wheelchairs were waiting right at the aircraft doors, and the connecting flight went off without a hitch. Flyfello’s team checked in on us via WhatsApp during the transit!',
+    highlight: 'Complimentary wheelchair assistance arranged + transit WhatsApp follow-up',
+  },
+  {
+    id: 'test-6',
+    name: 'Jasleen Kaur',
+    location: 'Edmonton, AB, Canada',
+    route: 'Edmonton (YEG) ⇄ Amritsar (ATQ)',
+    airline: 'Air India',
+    date: 'Travelled September 2026',
+    rating: 5,
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=160&q=80',
+    category: 'Student',
+    content:
+      'Flyfello offered an easy 3-month EMI installment payment plan which helped me manage expenses while moving back after graduation. Clear communication, friendly agent on WhatsApp, and genuine rates with no hidden agency fees. Will recommend to all Punjabi and Indian diaspora across Canada.',
+    highlight: 'Flexible EMI installment plan with zero hidden booking surcharges',
+  },
+];
