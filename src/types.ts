@@ -9,7 +9,9 @@ export interface Airport {
 }
 
 export type TripType = 'round-trip' | 'one-way' | 'multi-city';
-export type CabinClass = 'economy' | 'premium' | 'business' | 'first';
+export type CabinClass = 'economy' | 'premium' | 'business' | 'first' | 'extra-baggage' | string;
+
+export type Currency = 'INR' | 'CAD' | 'USD' | 'GBP';
 
 export interface SearchParams {
   origin: string; // airport code e.g. YVR
@@ -22,7 +24,7 @@ export interface SearchParams {
   children: number;
   infants: number;
   directOnly: boolean;
-  currency: 'CAD' | 'USD' | 'GBP';
+  currency: Currency;
 }
 
 export interface FlightSegment {

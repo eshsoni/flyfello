@@ -4,9 +4,10 @@ import { Menu, X, MessageCircle } from 'lucide-react';
 
 interface HeaderProps {
   onOpenChat?: () => void;
+  onOpenPage?: (page: 'privacy' | 'refund' | 'about' | 'contact') => void;
 }
 
-export const Header: React.FC<HeaderProps> = () => {
+export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -23,33 +24,34 @@ export const Header: React.FC<HeaderProps> = () => {
           </a>
 
           {/* Zone 2: Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8 text-sm font-semibold text-slate-700">
+          <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-700">
             <a href="#flight-search" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
               Search Flights
             </a>
             <a href="#why-flyfello" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
               Why Flyfello
             </a>
-            <a href="#why-flyfello" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
-              Baggage (2x 23kg)
-            </a>
             <a href="#testimonials" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
               Verified Reviews
             </a>
+            <button
+              type="button"
+              onClick={() => onOpenPage?.('about')}
+              className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              About Us
+            </button>
+            <button
+              type="button"
+              onClick={() => onOpenPage?.('contact')}
+              className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              Contact Us
+            </button>
           </nav>
 
-          {/* Zone 3: Primary Action - Direct WhatsApp Fare Desk */}
+          {/* Zone 3: Navigation Controls */}
           <div className="flex items-center gap-3 shrink-0">
-            <a
-              href="https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20would%20like%20to%20inquire%20about%20flights%20to%20India"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-4 py-2.5 text-xs sm:text-sm font-bold text-white bg-[#122754] hover:bg-[#F58220] rounded-xl transition-all shadow-sm hover:shadow-md whitespace-nowrap shrink-0 flex items-center gap-2 group"
-            >
-              <MessageCircle className="w-4 h-4 text-[#F58220] group-hover:text-white transition-colors" />
-              <span>WhatsApp Fare Desk</span>
-            </a>
-
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 cursor-pointer"

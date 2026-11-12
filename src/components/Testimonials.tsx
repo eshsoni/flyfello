@@ -22,7 +22,7 @@ export const Testimonials: React.FC = () => {
               Verified Passenger Experiences
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-[#122754] tracking-tight">
-              Trusted by 10,000+ Diaspora Travelers Across North America
+              Trusted by 1,000+ Travelers Across North America and India
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl">
               Real reviews from families, international students, and frequent flyers travelling between Canada/USA and India.

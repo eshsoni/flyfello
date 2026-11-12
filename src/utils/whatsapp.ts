@@ -6,7 +6,8 @@ export function buildWhatsAppFlightQueryUrl(params: SearchParams): string {
   const destAirport = getAirport(params.destination) || { city: params.destination, code: params.destination, flag: '🇮🇳' };
 
   const tripLabel = params.tripType === 'round-trip' ? 'Round Trip' : params.tripType === 'one-way' ? 'One Way' : 'Multi-City';
-  const cabinLabel = params.cabin.charAt(0).toUpperCase() + params.cabin.slice(1);
+  const cabinLabel = params.cabin === 'extra-baggage' ? 'Economy with Extra Baggage (3x 23kg)' : params.cabin.charAt(0).toUpperCase() + params.cabin.slice(1);
+  const baggageLabel = params.cabin === 'extra-baggage' ? '3x 23kg Extra Baggage Included' : '2x 23kg Check-in Bags Included';
   const totalPassengers = params.adults + params.children + params.infants;
 
   const text =
@@ -21,7 +22,7 @@ export function buildWhatsAppFlightQueryUrl(params: SearchParams): string {
     (params.infants > 0 ? `, ${params.infants} Infant${params.infants > 1 ? 's' : ''}` : '') +
     `)\n` +
     `💺 *Cabin Class:* ${cabinLabel}\n` +
-    `🧳 *Baggage:* 2x 23kg Check-in Bags Included\n` +
+    `🧳 *Baggage:* ${baggageLabel}\n` +
     `⚡ *Direct Flights Preferred:* ${params.directOnly ? 'Yes' : 'Direct & 1-Stop Options'}\n` +
     `💵 *Currency:* ${params.currency}\n\n` +
     `Hello Flyfello team! Please share the lowest consolidated agent fares and seat availability for this route.`;
@@ -38,10 +39,11 @@ export function buildWhatsAppRouteDealUrl(deal: {
   priceCad: number;
   priceUsd: number;
   stops: string;
-}, currency: 'CAD' | 'USD' | 'GBP'): string {
+}, currency: 'CAD' | 'USD' | 'GBP' | 'INR'): string {
   let price = `$${deal.priceCad} CAD`;
   if (currency === 'USD') price = `$${deal.priceUsd} USD`;
   if (currency === 'GBP') price = `£${Math.round(deal.priceCad * 0.58)} GBP`;
+  if (currency === 'INR') price = `₹${Math.round(deal.priceCad * 62).toLocaleString('en-IN')} INR`;
   const text =
     `✈️ *Flyfello Promo Route Inquiry*\n\n` +
     `🛫 *Route:* ${deal.fromCity} (${deal.fromCode}) ➔ ${deal.toCity} (${deal.toCode})\n` +
