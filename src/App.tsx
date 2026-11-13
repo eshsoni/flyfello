@@ -4,8 +4,10 @@ import { Header } from './components/Header';
 import { FlightSearch } from './components/FlightSearch';
 import { WhyFlyfello } from './components/WhyFlyfello';
 import { Testimonials } from './components/Testimonials';
+import { InstagramSection } from './components/InstagramSection';
 import { Footer } from './components/Footer';
 import { PolicyModal, PolicyPageType } from './components/PolicyModal';
+import { CookieConsent } from './components/CookieConsent';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PolicyPageType | null>(null);
@@ -24,12 +26,25 @@ export default function App() {
     currency: 'INR',
   });
 
-  // Support direct URL hash linking (e.g. #privacy, #refund, #about, #contact)
+  // Support direct URL hash linking (e.g. #privacy, #refund, #about, #contact, #help, etc.)
   useEffect(() => {
+    const validPages: PolicyPageType[] = [
+      'about',
+      'contact',
+      'disclaimer',
+      'cookies',
+      'terms',
+      'privacy',
+      'help',
+      'protocols',
+      'cancellation',
+      'refund',
+      'baggage',
+    ];
     const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase();
-      if (hash === 'privacy' || hash === 'refund' || hash === 'about' || hash === 'contact') {
-        setActivePage(hash as PolicyPageType);
+      const hash = window.location.hash.replace('#', '').toLowerCase() as PolicyPageType;
+      if (validPages.includes(hash)) {
+        setActivePage(hash);
       }
     };
 
@@ -56,7 +71,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Top Navigation Header */}
+      {/* Top Navigation Header & Air Suvidha Notice */}
       <Header onOpenPage={handleOpenPage} />
 
       {/* Main Content Sections */}
@@ -72,12 +87,15 @@ export default function App() {
 
         {/* Customer Testimonials & Verified Reviews */}
         <Testimonials />
+
+        {/* Instagram Account & Posts Showcase */}
+        <InstagramSection />
       </main>
 
-      {/* Footer with Policy & Company Links */}
+      {/* Footer with Visit Us (India), Company & Support Links */}
       <Footer onOpenPage={handleOpenPage} />
 
-      {/* Policy & Info Modal (Privacy, Refund, About Us, Contact Us) */}
+      {/* Policy & Info Modal */}
       {activePage && (
         <PolicyModal
           page={activePage}
@@ -85,6 +103,9 @@ export default function App() {
           onNavigate={(page) => handleOpenPage(page)}
         />
       )}
+
+      {/* Cookie Consent Pop-up (Always opens on every page load) */}
+      <CookieConsent onOpenPolicy={handleOpenPage} />
     </div>
   );
 }

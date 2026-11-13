@@ -6,19 +6,19 @@ export const WhyFlyfello: React.FC = () => {
     <section
       id="why-flyfello"
       style={{ width: '946px', maxWidth: '100%' }}
-      className="mx-auto scroll-mt-24 py-8 sm:py-10 bg-slate-50 border-b border-slate-200 overflow-hidden"
+      className="mx-auto scroll-mt-24 py-8 sm:py-10 bg-slate-50 border-b border-slate-200 overflow-hidden box-border"
     >
-      <div className="w-full px-4 sm:px-6">
+      <div className="w-full px-4 sm:px-6 box-border">
         {/* Section Header */}
-        <div className="max-w-3xl mb-6">
+        <div className="w-full max-w-3xl mb-6">
           <div className="text-xs font-bold text-[#F58220] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-            <Plane className="w-3.5 h-3.5 rotate-45 text-[#F58220]" />
+            <Plane className="w-3.5 h-3.5 rotate-45 text-[#F58220] shrink-0" />
             <span>Why Fly with Flyfello</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#122754] tracking-tight [text-wrap:balance]">
+          <h2 className="text-xl sm:text-3xl font-extrabold text-[#122754] tracking-tight [text-wrap:balance]">
             The Preferred Flight Specialist for Canada & USA to India
           </h2>
-          <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
             Booking long-haul transpacific or transatlantic flights to India shouldn't be stressful. We combine wholesale consolidator contracts with personal human care to ensure your journey is seamless from takeoff to landing.
           </p>
         </div>
@@ -26,12 +26,11 @@ export const WhyFlyfello: React.FC = () => {
         {/* Feature Grid with Visual Storytelling */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           {/* Left Column: Visual Asset & Core Promise (5 cols) */}
-          <div className="lg:col-span-5 relative rounded-2xl border border-slate-200 overflow-hidden shadow-sm min-h-[220px]">
+          <div className="lg:col-span-5 relative rounded-2xl border border-slate-200 overflow-hidden shadow-sm h-64 sm:h-72 lg:h-auto min-h-[220px]">
             <img
-              src="/src/assets/images/flight_cabin_comfort_1792428387992.jpg"
+              src="/assets/aistudio/image_edb1911e.png"
               alt="Comfortable international flight cabin"
-              className="w-full h-full object-cover object-center"
-              referrerPolicy="no-referrer"
+              className="w-full h-full object-cover object-top sm:object-center"
               onError={(e) => {
                 e.currentTarget.style.display = 'none';
               }}

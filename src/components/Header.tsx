@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { FlyfelloLogo } from './FlyfelloLogo';
-import { Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X, MessageCircle, AlertCircle, ExternalLink } from 'lucide-react';
+import { PolicyPageType } from './PolicyModal';
 
 interface HeaderProps {
   onOpenChat?: () => void;
-  onOpenPage?: (page: 'privacy' | 'refund' | 'about' | 'contact') => void;
+  onOpenPage?: (page: PolicyPageType) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
@@ -103,6 +104,34 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
           </div>
         )}
       </header>
+
+      {/* Air Suvidha 2.0 Travel Notice Strip (directly below logo and menu) */}
+      <div className="bg-gradient-to-r from-amber-100 via-orange-50 to-amber-100 text-[#122754] border-y-2 border-[#F58220] shadow-md relative z-30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 flex flex-col md:flex-row items-center justify-between gap-3.5 text-center md:text-left">
+          <div className="flex flex-col sm:flex-row items-center md:items-start gap-2.5 sm:gap-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#F58220] text-white text-[11px] font-extrabold uppercase tracking-wider shrink-0 shadow-xs">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>Travel Notice</span>
+            </span>
+            <p className="text-sm sm:text-[15px] font-semibold leading-snug text-[#122754]">
+              All international passengers travelling to India must complete the mandatory{' '}
+              <strong className="font-extrabold underline decoration-[#F58220] decoration-2 underline-offset-2">
+                Air Suvidha 2.0 Self Declaration Form
+              </strong>{' '}
+              before arrival. Please submit your declaration before your journey.
+            </p>
+          </div>
+          <a
+            href="https://airsuvidha.civilaviation.gov.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#122754] hover:bg-[#F58220] text-white font-bold text-xs sm:text-sm whitespace-nowrap shrink-0 shadow-md transition-colors"
+          >
+            <span>Submit Air Suvidha Form</span>
+            <ExternalLink className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
     </>
   );
 };
