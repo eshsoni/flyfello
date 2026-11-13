@@ -79,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
                 onClick={() => setMobileMenuOpen(false)}
                 className="py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors"
               >
-                Why Flyfello & 2x 23kg Baggage
+                Why Flyfello & 1x/2x 23kg + 7kg Cabin Baggage
               </a>
               <a
                 href="#testimonials"

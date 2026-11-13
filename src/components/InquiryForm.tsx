@@ -48,7 +48,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
       `👥 *Passengers:* ${formData.passengers}\n` +
       `💺 *Cabin:* ${formData.cabin.toUpperCase()}\n` +
       `📅 *Dates Flexible:* ${formData.flexibleDates ? 'Yes (+/- 3 days for cheapest fare)' : 'Fixed dates'}\n` +
-      `🧳 *Student Luggage Request:* ${formData.studentLuggage ? 'Yes (3x 23kg requested)' : 'Standard 2x 23kg'}\n` +
+      `🧳 *Baggage Preference:* ${formData.studentLuggage || formData.cabin === 'extra-baggage' ? '2x 23kg Bags + 7kg Cabin' : 'Default 1x 23kg Bag + 7kg Cabin'}\n` +
       `📝 *Notes:* ${formData.notes || 'None'}\n\n` +
       `Please provide the lowest consolidated quote!`
     );
@@ -267,10 +267,11 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                       onChange={(e) => setFormData({ ...formData, cabin: e.target.value as any })}
                       className="w-full h-11 px-3 bg-slate-800/90 border border-slate-700 rounded-xl text-xs text-white focus:outline-none focus:ring-1 focus:ring-amber-400"
                     >
-                      <option value="economy">Economy (2x 23kg)</option>
-                      <option value="premium">Premium Economy</option>
-                      <option value="business">Business Class (Lie Flat)</option>
-                      <option value="first">First Class</option>
+                      <option value="economy">Economy (1x 23kg Bag + 7kg Cabin)</option>
+                      <option value="extra-baggage">Economy (2x 23kg Bags + 7kg Cabin)</option>
+                      <option value="premium">Premium Economy (2x 23kg + 7kg Cabin)</option>
+                      <option value="business">Business Class (Lie Flat · 2x 23kg + Cabin)</option>
+                      <option value="first">First Class (2x 23kg + Cabin)</option>
                     </select>
                   </div>
 
@@ -335,7 +336,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                       onChange={(e) => setFormData({ ...formData, studentLuggage: e.target.checked })}
                       className="w-4 h-4 rounded text-amber-500 focus:ring-amber-400 border-slate-700 bg-slate-800"
                     />
-                    <span>International Student (Check 3rd baggage / extra 23kg availability)</span>
+                    <span>Upgrade to 2x 23kg Checked Bags + 7kg Cabin (Student / Family option)</span>
                   </label>
                 </div>
 

@@ -6,8 +6,20 @@ export function buildWhatsAppFlightQueryUrl(params: SearchParams): string {
   const destAirport = getAirport(params.destination) || { city: params.destination, code: params.destination, flag: '🇮🇳' };
 
   const tripLabel = params.tripType === 'round-trip' ? 'Round Trip' : params.tripType === 'one-way' ? 'One Way' : 'Multi-City';
-  const cabinLabel = params.cabin === 'extra-baggage' ? 'Economy with Extra Baggage (3x 23kg)' : params.cabin.charAt(0).toUpperCase() + params.cabin.slice(1);
-  const baggageLabel = params.cabin === 'extra-baggage' ? '3x 23kg Extra Baggage Included' : '2x 23kg Check-in Bags Included';
+  const isTwoBags =
+    params.cabin === 'extra-baggage' ||
+    params.cabin === 'premium' ||
+    params.cabin === 'business' ||
+    params.cabin === 'first';
+  const cabinLabel =
+    params.cabin === 'extra-baggage'
+      ? 'Economy (2x 23kg Bags + 7kg Cabin)'
+      : params.cabin === 'economy'
+      ? 'Economy (1x 23kg Bag + 7kg Cabin)'
+      : params.cabin.charAt(0).toUpperCase() + params.cabin.slice(1);
+  const baggageLabel = isTwoBags
+    ? '2x 23kg Checked Bags + 7kg Cabin'
+    : '1x 23kg Checked Bag + 7kg Cabin';
   const totalPassengers = params.adults + params.children + params.infants;
 
   const text =
@@ -48,7 +60,7 @@ export function buildWhatsAppRouteDealUrl(deal: {
     `✈️ *Flyfello Promo Route Inquiry*\n\n` +
     `🛫 *Route:* ${deal.fromCity} (${deal.fromCode}) ➔ ${deal.toCity} (${deal.toCode})\n` +
     `🏢 *Airline:* ${deal.airline} (${deal.stops})\n` +
-    `🏷️ *Featured Rate:* From ${price} (Includes 2x 23kg Baggage)\n\n` +
+    `🏷️ *Featured Rate:* From ${price} (1x 23kg Bag + 7kg Cabin)\n\n` +
     `Hi Flyfello! I would like to check available dates and book this route deal.`;
 
   return `https://wa.me/16048326304?text=${encodeURIComponent(text)}`;

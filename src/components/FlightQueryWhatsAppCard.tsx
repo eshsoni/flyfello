@@ -24,6 +24,15 @@ export const FlightQueryWhatsAppCard: React.FC<FlightQueryWhatsAppCardProps> = (
   const totalPassengers = params.adults + params.children + params.infants;
   const whatsappUrl = buildWhatsAppFlightQueryUrl(params);
 
+  const isTwoBags =
+    params.cabin === 'extra-baggage' ||
+    params.cabin === 'premium' ||
+    params.cabin === 'business' ||
+    params.cabin === 'first';
+  const baggageLabel = isTwoBags
+    ? '2x 23kg Checked Bags + 7kg Cabin'
+    : '1x 23kg Checked Bag + 7kg Cabin';
+
   const handleCopyQuery = () => {
     const tripLabel = params.tripType === 'round-trip' ? 'Round Trip' : params.tripType === 'one-way' ? 'One Way' : 'Multi-City';
     const text =
@@ -34,7 +43,7 @@ export const FlightQueryWhatsAppCard: React.FC<FlightQueryWhatsAppCardProps> = (
       `Trip Type: ${tripLabel}\n` +
       `Passengers: ${totalPassengers}\n` +
       `Cabin: ${params.cabin}\n` +
-      `Baggage: 2x 23kg Included`;
+      `Baggage: ${baggageLabel}`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -123,7 +132,7 @@ export const FlightQueryWhatsAppCard: React.FC<FlightQueryWhatsAppCardProps> = (
                 <div className="mt-3 pt-3 border-t border-slate-200/60 flex flex-wrap items-center justify-between text-xs text-slate-600 gap-2">
                   <span className="flex items-center gap-1.5 font-semibold text-emerald-700">
                     <Luggage className="w-3.5 h-3.5" />
-                    2x 23kg Checked Bags Included
+                    {baggageLabel}
                   </span>
                   <span className="font-medium text-slate-500">
                     Class: <strong className="text-slate-800 capitalize">{params.cabin}</strong>

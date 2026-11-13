@@ -189,7 +189,7 @@ export const FlightSearch: React.FC<FlightSearchProps> = ({ onSearch, currentPar
             Lowest fare guaranteed
           </span>
           <span className="hidden sm:inline text-xs text-slate-500 font-medium border-l border-slate-300 pl-2.5">
-            Wholesale consolidated airfares · 2x 23kg luggage included · 24/7 personal desk
+            Wholesale consolidated airfares · 1x 23kg + 7kg cabin default (2x 23kg option) · 24/7 personal desk
           </span>
         </div>
 
@@ -822,11 +822,11 @@ export const FlightSearch: React.FC<FlightSearchProps> = ({ onSearch, currentPar
                 onChange={(e) => setCabin(e.target.value as CabinClass)}
                 className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-800 focus:ring-1 focus:ring-[#F58220] focus:outline-none cursor-pointer"
               >
-                <option value="economy">Economy Class</option>
-                <option value="extra-baggage">Economy with Extra Baggage (3x 23kg)</option>
-                <option value="premium">Premium Economy</option>
-                <option value="business">Business Class (Lie-Flat)</option>
-                <option value="first">First Class Luxury</option>
+                <option value="economy">Economy (1x 23kg Bag + 7kg Cabin)</option>
+                <option value="extra-baggage">Economy (2x 23kg Bags + 7kg Cabin)</option>
+                <option value="premium">Premium Economy (2x 23kg + 7kg Cabin)</option>
+                <option value="business">Business Class (Lie-Flat · 2x 23kg + Cabin)</option>
+                <option value="first">First Class Luxury (2x 23kg + Cabin)</option>
               </select>
             </div>
           </div>

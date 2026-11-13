@@ -913,15 +913,15 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
               </h2>
               <div className="space-y-5 text-xs sm:text-sm">
                 <div className="p-4 bg-orange-50/70 border border-orange-100 rounded-2xl">
-                  <h3 className="font-bold text-[#122754] text-base mb-1">Standard International Economy (2x 23kg)</h3>
+                  <h3 className="font-bold text-[#122754] text-base mb-1">Default International Economy (1x 23kg Bag + 7kg Cabin)</h3>
                   <p className="text-slate-600">
-                    Unlike stripped-down basic economy fares online, FlyFello prioritizes full-allowance consolidated tickets typically including 2 checked bags (up to 23kg / 50lbs each) plus 1 cabin carry-on (7kg–10kg) and 1 personal item on Canada/USA–India routes.
+                    FlyFello’s default international economy fares include 1 checked bag (up to 23kg / 50lbs) plus 1 cabin carry-on (7kg) and 1 personal item on Canada/USA/UK–India routes.
                   </p>
                 </div>
                 <div className="p-4 bg-blue-50/70 border border-blue-100 rounded-2xl">
-                  <h3 className="font-bold text-[#122754] text-base mb-1">Extra Baggage Option (3x 23kg)</h3>
+                  <h3 className="font-bold text-[#122754] text-base mb-1">Upgraded Baggage Option (2x 23kg Bags + 7kg Cabin)</h3>
                   <p className="text-slate-600">
-                    Need extra luggage for family travel or relocation? Select "Economy with Extra Baggage (3x 23kg)" in the search panel so our agents quote special student or multi-piece consolidator allowances.
+                    Need extra luggage for family travel or relocation? Select &ldquo;Economy (2x 23kg Bags + 7kg Cabin)&rdquo; in the search panel so our agents quote 2 checked bags (23kg each) plus 7kg cabin baggage.
                   </p>
                 </div>
                 <div>

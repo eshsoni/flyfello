@@ -21,7 +21,7 @@ export const PopularRoutes: React.FC<PopularRoutesProps> = ({ onSelectRoute, cur
               Popular Canada, USA & UK to India Routes
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
-              Hand-picked discounted fares negotiated directly with premier international carriers. All fares include 2x 23kg checked baggage.
+              Hand-picked discounted fares negotiated directly with premier international carriers. Default fares include 1x 23kg checked bag + 7kg cabin (2x 23kg + cabin option available).
             </p>
           </div>
 
@@ -87,7 +87,7 @@ export const PopularRoutes: React.FC<PopularRoutesProps> = ({ onSelectRoute, cur
                     <span aria-hidden="true">·</span>
                     <span className="text-emerald-700 font-medium flex items-center gap-1">
                       <Luggage className="w-3 h-3" />
-                      2x 23kg
+                      1x 23kg + 7kg Cabin
                     </span>
                   </div>
                 </div>

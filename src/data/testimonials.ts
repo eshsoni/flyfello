@@ -12,8 +12,8 @@ export const TESTIMONIALS: Testimonial[] = [
     avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=160&q=80',
     category: 'Family',
     content:
-      'We were booking flights for our whole family of four to attend a cousin\'s wedding in Punjab during Diwali season. Online portals were quoting over $2,100 CAD per ticket with only 1 piece of luggage. We contacted Flyfello on WhatsApp, and within 20 minutes they secured us Qatar Airways tickets at $1,540 CAD each with 2 full 23kg bags per person plus baby stroller allowance. Saved our family over $2,200 CAD!',
-    highlight: 'Saved $2,240 CAD for family of 4 with 2x 23kg luggage included',
+      'We were booking flights for our whole family of four to attend a cousin\'s wedding in Punjab during Diwali season. Online portals were quoting over $2,100 CAD per ticket with only 1x 23kg luggage. We contacted Flyfello on WhatsApp, and within 20 minutes they secured us Qatar Airways tickets at $1,540 CAD each upgraded to 2x 23kg bags + 7kg cabin per person plus baby stroller allowance. Saved our family over $2,200 CAD!',
+    highlight: 'Saved $2,240 CAD for family of 4 with 2x 23kg + 7kg cabin option',
   },
   {
     id: 'test-2',
@@ -26,8 +26,8 @@ export const TESTIMONIALS: Testimonial[] = [
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=160&q=80',
     category: 'Student',
     content:
-      'As an international university student heading home between co-op terms, price and luggage were my two biggest worries. Flyfello arranged an exclusive student fare with Emirates and ensured my 2 bags of 23kg were honored seamlessly. Payment via Interac e-Transfer made it effortless with zero credit card foreign fees. Flyfello is my go-to for all trips home.',
-    highlight: 'Full 2-piece baggage guaranteed + zero-fee Interac e-Transfer payment',
+      'As an international university student heading home between co-op terms, price and luggage were my two biggest worries. Flyfello arranged an exclusive student fare with Emirates upgraded from the standard 1x 23kg to 2x 23kg bags + 7kg cabin seamlessly. Payment via Interac e-Transfer made it effortless with zero credit card foreign fees. Flyfello is my go-to for all trips home.',
+    highlight: '2x 23kg + 7kg cabin upgrade + zero-fee Interac e-Transfer payment',
   },
   {
     id: 'test-3',

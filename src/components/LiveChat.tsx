@@ -19,7 +19,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
       timestamp: 'Just now',
       quickActions: [
         { label: 'Check lowest fare to Delhi / Amritsar', action: 'fares' },
-        { label: 'Baggage Allowance (2x 23kg)', action: 'baggage' },
+        { label: 'Baggage Allowance (1x/2x 23kg + Cabin)', action: 'baggage' },
         { label: 'How does WhatsApp Payment work?', action: 'payment' },
         { label: 'EMI / Installment options', action: 'emi' },
       ],
@@ -47,7 +47,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
     if (q.includes('baggage') || q.includes('luggage') || q.includes('weight') || q.includes('23kg')) {
       return {
-        text: 'All Flyfello flight bookings to India include 2 pieces of checked baggage (23 kg / 50 lbs each) plus 1 cabin bag (7 kg) and 1 personal item (laptop bag). We also have special student allowances for 3 bags (3x 23kg) on select airlines like Air India, Emirates, and Qatar.',
+        text: 'Default Flyfello flight bookings include 1 checked bag (1x 23 kg) + 1 cabin bag (7 kg) and 1 personal item. We also offer an upgraded 2x 23 kg checked bags + 7 kg cabin option across major carriers like Air India, Emirates, and Qatar.',
         quickActions: [
           { label: 'Chat with agent on WhatsApp', action: 'whatsapp' },
           { label: 'Check flight schedules', action: 'fares' },
@@ -75,7 +75,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
     if (q.includes('fare') || q.includes('price') || q.includes('cheap') || q.includes('cost') || q.includes('deal') || q.includes('delhi') || q.includes('amritsar') || q.includes('punjab')) {
       return {
-        text: 'Current promo fares between Canada/USA and India start around $1,420–$1,540 CAD round trip, with all taxes and 2x 23kg bags included! Non-stop flights with Air India or 1-stop options with Emirates and Qatar sell out quickly. What dates and cities are you looking for?',
+        text: 'Current promo fares between Canada/USA and India start around $1,420–$1,540 CAD round trip, with all taxes and default 1x 23kg + 7kg cabin included (2x 23kg + cabin option available)! Non-stop flights with Air India or 1-stop options with Emirates and Qatar sell out quickly. What dates and cities are you looking for?',
         quickActions: [
           { label: 'Get Exact Dates Quote on WhatsApp', action: 'whatsapp' },
           { label: 'Fill Custom Inquiry Form', action: 'inquiry' },

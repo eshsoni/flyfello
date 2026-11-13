@@ -91,8 +91,8 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSearch, onOpenInquiry }) =
                 <Luggage className="w-4 h-4" />
               </div>
               <div>
-                <div className="font-semibold text-white">2x 23kg Baggage Guaranteed</div>
-                <div className="text-slate-400 text-[11px]">Two full check-in suitcases included on all bookings</div>
+                <div className="font-semibold text-white">1x 23kg + 7kg Cabin (2x 23kg Option)</div>
+                <div className="text-slate-400 text-[11px]">Default 1x 23kg + 7kg cabin, or upgrade to 2x 23kg + cabin</div>
               </div>
             </div>
 
