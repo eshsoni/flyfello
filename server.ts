@@ -125,6 +125,39 @@ async function fetchFromInstagramPublicProfile(): Promise<InstagramMediaItem[]> 
 async function startServer() {
   const app = express();
 
+  const resolveBaseUrl = (req: express.Request): string => {
+    const configured = process.env.APP_URL?.trim();
+    if (configured && configured !== 'MY_APP_URL') {
+      return configured.replace(/\/+$/, '');
+    }
+    const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+    const host = req.get('host') || `localhost:${PORT}`;
+    return `${protocol}://${host}`;
+  };
+
+  app.get('/robots.txt', (req, res) => {
+    const baseUrl = resolveBaseUrl(req);
+    res.type('text/plain').send(
+      `User-agent: *\nAllow: /\n\nSitemap: ${baseUrl}/sitemap.xml\n`
+    );
+  });
+
+  app.get('/sitemap.xml', (req, res) => {
+    const baseUrl = resolveBaseUrl(req);
+    const lastMod = new Date().toISOString().split('T')[0];
+    res.type('application/xml').send(
+      `<?xml version="1.0" encoding="UTF-8"?>\n` +
+        `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+        `  <url>\n` +
+        `    <loc>${baseUrl}/</loc>\n` +
+        `    <lastmod>${lastMod}</lastmod>\n` +
+        `    <changefreq>daily</changefreq>\n` +
+        `    <priority>1.0</priority>\n` +
+        `  </url>\n` +
+        `</urlset>\n`
+    );
+  });
+
   app.get('/api/instagram/feed', async (_req, res) => {
     try {
       if (cachedFeed && Date.now() - cachedFeed.fetchedAt < CACHE_TTL_MS) {

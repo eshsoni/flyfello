@@ -53,6 +53,45 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Dynamic canonical URL, og:url, and page title management for SEO
+  useEffect(() => {
+    const canonicalUrl = window.location.origin + window.location.pathname;
+    let canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.setAttribute('href', canonicalUrl);
+
+    let ogUrlMeta = document.querySelector<HTMLMetaElement>('meta[property="og:url"]');
+    if (!ogUrlMeta) {
+      ogUrlMeta = document.createElement('meta');
+      ogUrlMeta.setAttribute('property', 'og:url');
+      document.head.appendChild(ogUrlMeta);
+    }
+    ogUrlMeta.setAttribute('content', canonicalUrl);
+  }, []);
+
+  useEffect(() => {
+    const pageTitles: Record<PolicyPageType, string> = {
+      about: 'About Us | FlyFello',
+      contact: 'Contact Us | FlyFello',
+      disclaimer: 'Disclaimer | FlyFello',
+      cookies: 'Cookies Policy | FlyFello',
+      terms: 'Terms and Conditions | FlyFello',
+      privacy: 'Privacy Policy | FlyFello',
+      help: 'Help Centre | FlyFello',
+      protocols: 'Flight Booking Protocols | FlyFello',
+      cancellation: 'Cancellation Policy | FlyFello',
+      refund: 'Refund Policy | FlyFello',
+      baggage: 'Baggage Information | FlyFello',
+    };
+    document.title = activePage
+      ? pageTitles[activePage]
+      : 'FlyFello – Discounted USA & Canada to India Flights';
+  }, [activePage]);
+
   const handleOpenPage = (page: PolicyPageType) => {
     setActivePage(page);
     window.location.hash = page;

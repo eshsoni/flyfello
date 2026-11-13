@@ -177,6 +177,13 @@ export const FlightSearch: React.FC<FlightSearchProps> = ({ onSearch, currentPar
         </div>
       </div>
 
+      {/* Primary SEO H1 Headline */}
+      <div className="text-center max-w-3xl mb-3">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-[#122754] tracking-tight [text-wrap:balance]">
+          Discounted Flights Across Canada, USA, UK &amp; India
+        </h1>
+      </div>
+
       {/* Lowest Fare Guaranteed Visual Line (Centrized) */}
       <div className="mb-3.5 flex flex-wrap items-center justify-center gap-3 px-1 w-full max-w-5xl">
         <div className="inline-flex items-center gap-2.5 bg-gradient-to-r from-orange-500/15 via-amber-500/10 to-transparent border border-orange-200/90 rounded-full px-4 py-1.5 shadow-xs">
