@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { SearchParams } from './types';
 import { Header } from './components/Header';
 import { FlightSearch } from './components/FlightSearch';
@@ -145,6 +146,9 @@ export default function App() {
 
       {/* Cookie Consent Pop-up (Always opens on every page load) */}
       <CookieConsent onOpenPolicy={handleOpenPage} />
+
+      {/* Vercel Web Analytics */}
+      <Analytics />
     </div>
   );
 }
