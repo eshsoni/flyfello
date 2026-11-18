@@ -396,9 +396,62 @@ async function startServer() {
 
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: false, ws: false },
       appType: 'spa',
     });
+
+    app.get(['/@vite/client', '/bundledDevClient.mjs'], (req, res, next) => {
+      delete req.headers['if-none-match'];
+      delete req.headers['if-modified-since'];
+
+      const chunks: Buffer[] = [];
+      const origWrite = res.write.bind(res);
+      const origEnd = res.end.bind(res);
+
+      (res as any).write = (chunk: any, encoding?: any) => {
+        if (chunk) {
+          chunks.push(
+            Buffer.isBuffer(chunk)
+              ? chunk
+              : Buffer.from(String(chunk), typeof encoding === 'string' ? (encoding as BufferEncoding) : 'utf-8')
+          );
+        }
+        return true;
+      };
+
+      (res as any).end = (chunk?: any, encoding?: any, cb?: any) => {
+        if (typeof chunk === 'function') {
+          cb = chunk;
+          chunk = undefined;
+        }
+        if (chunk) {
+          chunks.push(
+            Buffer.isBuffer(chunk)
+              ? chunk
+              : Buffer.from(String(chunk), typeof encoding === 'string' ? (encoding as BufferEncoding) : 'utf-8')
+          );
+        }
+
+        res.write = origWrite;
+        res.end = origEnd;
+
+        if (chunks.length > 0) {
+          let code = Buffer.concat(chunks).toString('utf-8');
+          code = code.replace(
+            'await wsTransport.connect(handlers);',
+            'return; /* HMR disabled */'
+          );
+          res.removeHeader('Content-Length');
+          res.removeHeader('ETag');
+          return origEnd(code, cb);
+        }
+
+        return origEnd(cb);
+      };
+
+      next();
+    });
+
     app.use(vite.middlewares);
   } else {
     const distPath = path.resolve(__dirname, 'dist');
