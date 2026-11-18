@@ -73,6 +73,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
   const [submitting, setSubmitting] = useState(false);
   const [referenceId, setReferenceId] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [pendingReason, setPendingReason] = useState<string | null>(null);
   const [errors, setErrors] = useState<Partial<Record<keyof HolidayFormState, string>>>({});
 
   const resolvedDestination =
@@ -141,43 +142,57 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
     return Object.keys(nextErrors).length === 0;
   };
 
+  const sendInquiry = async () => {
+    setSubmitting(true);
+    let ref = referenceId || `FF-HOL-${Math.floor(100000 + Math.random() * 900000)}`;
+    let didSendEmail = false;
+    let reason: string | null = null;
+
+    const payload = JSON.stringify({
+      ...form,
+      fullName: form.fullName.trim(),
+      phone: form.phone.trim(),
+      email: form.email.trim(),
+      departureCity: form.departureCity.trim(),
+      destination: resolvedDestination,
+      notes: form.notes.trim(),
+    });
+
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch('/api/holiday-inquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+        });
+        const contentType = response.headers.get('content-type') || '';
+        if (response.ok && contentType.includes('application/json')) {
+          const data = await response.json();
+          if (data?.referenceId) {
+            ref = data.referenceId;
+          }
+          didSendEmail = Boolean(data?.emailSent);
+          reason = didSendEmail ? null : data?.reason || 'SMTP_DELIVERY_FAILED';
+          break;
+        } else {
+          reason = `SERVER_HTTP_${response.status}`;
+        }
+      } catch {
+        reason = 'NETWORK_UNREACHABLE';
+      }
+    }
+
+    setSubmitting(false);
+    setEmailSent(didSendEmail);
+    setPendingReason(reason);
+    setReferenceId(ref);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
     if (!validateForm()) return;
-
-    setSubmitting(true);
-    let ref = `FF-HOL-${Math.floor(100000 + Math.random() * 900000)}`;
-    let didSendEmail = false;
-
-    try {
-      const response = await fetch('/api/holiday-inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          fullName: form.fullName.trim(),
-          phone: form.phone.trim(),
-          email: form.email.trim(),
-          departureCity: form.departureCity.trim(),
-          destination: resolvedDestination,
-          notes: form.notes.trim(),
-        }),
-      });
-      if (response.ok) {
-        const data = await response.json();
-        if (data?.referenceId) {
-          ref = data.referenceId;
-        }
-        didSendEmail = Boolean(data?.emailSent);
-      }
-    } catch {
-      // Proceed smoothly with client-generated reference ID
-    } finally {
-      setSubmitting(false);
-      setEmailSent(didSendEmail);
-      setReferenceId(ref);
-    }
+    await sendInquiry();
   };
 
   return (
@@ -275,17 +290,50 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                     ) : (
                       <>
                         Thank you, <strong>{form.fullName}</strong>. Your inquiry for{' '}
-                        <strong>{resolvedDestination}</strong> was logged on the server, but SMTP email delivery could not complete right now. Please message us on WhatsApp at <strong>+1 (737) 290-4745</strong> for immediate help.
+                        <strong>{resolvedDestination}</strong> was logged, but automatic email delivery could not complete right now
+                        {pendingReason ? ` (${pendingReason})` : ''}. You can retry below or message us directly on WhatsApp.
                       </>
                     )}
                   </p>
                 </div>
+
+                {!emailSent && (
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                    <button
+                      type="button"
+                      disabled={submitting}
+                      onClick={sendInquiry}
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#122754] hover:bg-[#F58220] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Retrying...</span>
+                        </>
+                      ) : (
+                        <span>Retry Email Delivery</span>
+                      )}
+                    </button>
+                    <a
+                      href={`https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(
+                        `Hi FlyFello! Holiday Inquiry Ref ${referenceId}\nName: ${form.fullName}\nPhone: ${form.phone}\nEmail: ${form.email}\nFrom: ${form.departureCity}\nDestination: ${resolvedDestination}\nDate: ${form.travelDate} (${form.nights})\nType: ${form.packageType}\nTravelers: ${form.adults} Adult(s), ${form.children} Child(ren)\nHotel: ${form.hotelCategory}\nFlight Ticket: ${form.includeFlights ? 'Yes' : 'No'}\nBudget: ${form.budget}\nNotes: ${form.notes}`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#1ebe5d] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Send via WhatsApp</span>
+                    </a>
+                  </div>
+                )}
 
                 <button
                   type="button"
                   onClick={() => {
                     setReferenceId(null);
                     setEmailSent(false);
+                    setPendingReason(null);
                   }}
                   className="text-xs font-bold text-[#F58220] hover:underline pt-2 cursor-pointer"
                 >
@@ -308,6 +356,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                       <input
                         type="text"
                         required
+                        autoComplete="name"
                         placeholder="e.g. Amanpreet Singh"
                         value={form.fullName}
                         onChange={(e) => updateField('fullName', e.target.value)}
@@ -329,6 +378,8 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                       <input
                         type="tel"
                         required
+                        autoComplete="tel"
+                        inputMode="tel"
                         placeholder="+91 98765 43210 / +1 ..."
                         value={form.phone}
                         onChange={(e) => updateField('phone', e.target.value)}
@@ -350,6 +401,10 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                       <input
                         type="email"
                         required
+                        autoComplete="email"
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        inputMode="email"
                         placeholder="name@email.com"
                         value={form.email}
                         onChange={(e) => updateField('email', e.target.value)}

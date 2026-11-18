@@ -189,87 +189,95 @@ async function startServer() {
       const toEmail = process.env.INQUIRY_TO_EMAIL?.trim() || smtpUser || 'info@flyfello.in';
 
       if (smtpPass && smtpPass !== 'MY_ZOHO_SMTP_APP_PASSWORD') {
-        try {
+        const flightsInfo = payload.includeFlights
+          ? 'Yes'
+          : 'No (Land Package Only)';
+
+        const textBody = [
+          `FlyFello Holiday Booking Inquiry (${referenceId})`,
+          `Received: ${receivedAt}`,
+          '',
+          `Name: ${payload.fullName || 'N/A'}`,
+          `Phone / WhatsApp: ${payload.phone || 'N/A'}`,
+          `Email: ${payload.email || 'N/A'}`,
+          `Departure City: ${payload.departureCity || 'N/A'}`,
+          `Destination: ${payload.destination || 'N/A'}`,
+          `Package Type: ${payload.packageType || 'N/A'}`,
+          `Departure Date: ${payload.travelDate || 'N/A'}`,
+          `Duration: ${payload.nights || 'N/A'}`,
+          `Travelers: ${payload.adults ?? 2} Adult(s), ${payload.children ?? 0} Child(ren)`,
+          `Hotel Category: ${payload.hotelCategory || 'N/A'}`,
+          `Package with Flight Ticket: ${flightsInfo}`,
+          `Estimated Budget: ${payload.budget || 'N/A'}`,
+          `Special Requests: ${payload.notes || 'None'}`,
+        ].join('\n');
+
+        const rows: Array<[string, string]> = [
+          ['Reference ID', referenceId],
+          ['Full Name', String(payload.fullName || 'N/A')],
+          ['Phone / WhatsApp', String(payload.phone || 'N/A')],
+          ['Email', String(payload.email || 'N/A')],
+          ['Departure City', String(payload.departureCity || 'N/A')],
+          ['Destination', String(payload.destination || 'N/A')],
+          ['Holiday Type', String(payload.packageType || 'N/A')],
+          ['Departure Date', String(payload.travelDate || 'N/A')],
+          ['Trip Duration', String(payload.nights || 'N/A')],
+          ['Travelers', `${payload.adults ?? 2} Adult(s), ${payload.children ?? 0} Child(ren)`],
+          ['Hotel Category', String(payload.hotelCategory || 'N/A')],
+          ['Package with Flight Ticket', flightsInfo],
+          ['Estimated Budget', String(payload.budget || 'N/A')],
+          ['Special Requests', String(payload.notes || 'None')],
+        ];
+
+        const htmlRows = rows
+          .map(
+            ([label, value]) =>
+              `<tr>
+                <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#122754;width:180px;background:#f8fafc;">${escapeHtml(label)}</td>
+                <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;color:#334155;">${escapeHtml(value)}</td>
+              </tr>`
+          )
+          .join('');
+
+        const htmlBody = `
+          <div style="font-family:Arial,Helvetica,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+            <div style="background:#122754;padding:20px 24px;color:#ffffff;">
+              <h2 style="margin:0;font-size:20px;">New Holiday Booking Inquiry</h2>
+              <p style="margin:6px 0 0;font-size:13px;color:#fbbf24;font-weight:bold;">Ref: ${escapeHtml(referenceId)}</p>
+            </div>
+            <table style="width:100%;border-collapse:collapse;font-size:14px;">
+              ${htmlRows}
+            </table>
+            <div style="padding:14px 24px;background:#f8fafc;font-size:12px;color:#64748b;">
+              Submitted via FlyFello Holiday Bookings Form at ${escapeHtml(receivedAt)}
+            </div>
+          </div>
+        `;
+
+        const cleanReplyTo =
+          typeof payload.email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email.trim())
+            ? payload.email.trim()
+            : undefined;
+
+        const sendWithPort = async (port: number) => {
           const transporter = nodemailer.createTransport({
             host: smtpHost,
-            port: smtpPort,
-            secure: smtpPort === 465,
-            ...(smtpPort === 587 ? { requireTLS: true } : {}),
+            port,
+            secure: port === 465,
+            ...(port === 587 ? { requireTLS: true } : {}),
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 15000,
             auth: {
               user: smtpUser,
               pass: smtpPass,
             },
           });
 
-          const flightsInfo = payload.includeFlights
-            ? 'Yes'
-            : 'No (Land Package Only)';
-
-          const textBody = [
-            `FlyFello Holiday Booking Inquiry (${referenceId})`,
-            `Received: ${receivedAt}`,
-            '',
-            `Name: ${payload.fullName || 'N/A'}`,
-            `Phone / WhatsApp: ${payload.phone || 'N/A'}`,
-            `Email: ${payload.email || 'N/A'}`,
-            `Departure City: ${payload.departureCity || 'N/A'}`,
-            `Destination: ${payload.destination || 'N/A'}`,
-            `Package Type: ${payload.packageType || 'N/A'}`,
-            `Departure Date: ${payload.travelDate || 'N/A'}`,
-            `Duration: ${payload.nights || 'N/A'}`,
-            `Travelers: ${payload.adults ?? 2} Adult(s), ${payload.children ?? 0} Child(ren)`,
-            `Hotel Category: ${payload.hotelCategory || 'N/A'}`,
-            `Package with Flight Ticket: ${flightsInfo}`,
-            `Estimated Budget: ${payload.budget || 'N/A'}`,
-            `Special Requests: ${payload.notes || 'None'}`,
-          ].join('\n');
-
-          const rows: Array<[string, string]> = [
-            ['Reference ID', referenceId],
-            ['Full Name', String(payload.fullName || 'N/A')],
-            ['Phone / WhatsApp', String(payload.phone || 'N/A')],
-            ['Email', String(payload.email || 'N/A')],
-            ['Departure City', String(payload.departureCity || 'N/A')],
-            ['Destination', String(payload.destination || 'N/A')],
-            ['Holiday Type', String(payload.packageType || 'N/A')],
-            ['Departure Date', String(payload.travelDate || 'N/A')],
-            ['Trip Duration', String(payload.nights || 'N/A')],
-            ['Travelers', `${payload.adults ?? 2} Adult(s), ${payload.children ?? 0} Child(ren)`],
-            ['Hotel Category', String(payload.hotelCategory || 'N/A')],
-            ['Package with Flight Ticket', flightsInfo],
-            ['Estimated Budget', String(payload.budget || 'N/A')],
-            ['Special Requests', String(payload.notes || 'None')],
-          ];
-
-          const htmlRows = rows
-            .map(
-              ([label, value]) =>
-                `<tr>
-                  <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;font-weight:600;color:#122754;width:180px;background:#f8fafc;">${escapeHtml(label)}</td>
-                  <td style="padding:10px 14px;border-bottom:1px solid #e2e8f0;color:#334155;">${escapeHtml(value)}</td>
-                </tr>`
-            )
-            .join('');
-
-          const htmlBody = `
-            <div style="font-family:Arial,Helvetica,sans-serif;max-width:640px;margin:0 auto;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
-              <div style="background:#122754;padding:20px 24px;color:#ffffff;">
-                <h2 style="margin:0;font-size:20px;">New Holiday Booking Inquiry</h2>
-                <p style="margin:6px 0 0;font-size:13px;color:#fbbf24;font-weight:bold;">Ref: ${escapeHtml(referenceId)}</p>
-              </div>
-              <table style="width:100%;border-collapse:collapse;font-size:14px;">
-                ${htmlRows}
-              </table>
-              <div style="padding:14px 24px;background:#f8fafc;font-size:12px;color:#64748b;">
-                Submitted via FlyFello Holiday Bookings Form at ${escapeHtml(receivedAt)}
-              </div>
-            </div>
-          `;
-
-          const mailInfo = await transporter.sendMail({
+          return transporter.sendMail({
             from: `"FlyFello Holiday Desk" <${smtpUser}>`,
             to: toEmail,
-            ...(payload.email ? { replyTo: String(payload.email) } : {}),
+            ...(cleanReplyTo ? { replyTo: cleanReplyTo } : {}),
             subject: `Holiday Inquiry (${referenceId}) - ${payload.destination || 'Package'} | ${payload.fullName || 'Customer'}`,
             text: textBody,
             html: htmlBody,
@@ -277,12 +285,26 @@ async function startServer() {
               'X-Entity-Ref-ID': referenceId,
             },
           });
+        };
+
+        try {
+          let mailInfo;
+          try {
+            mailInfo = await sendWithPort(smtpPort);
+          } catch (primaryErr) {
+            const fallbackPort = smtpPort === 465 ? 587 : 465;
+            console.warn(
+              `[Holiday Inquiry SMTP] Port ${smtpPort} failed, retrying port ${fallbackPort}:`,
+              (primaryErr as Error)?.message
+            );
+            mailInfo = await sendWithPort(fallbackPort);
+          }
 
           const accepted = Array.isArray(mailInfo.accepted) ? mailInfo.accepted.map(String) : [];
           const rejected = Array.isArray(mailInfo.rejected) ? mailInfo.rejected.map(String) : [];
           emailSent = accepted.length > 0;
           console.log(
-            `[Holiday Inquiry SMTP Result] ref=${referenceId} from=${smtpUser} to=${toEmail} host=${smtpHost}:${smtpPort} accepted=${JSON.stringify(accepted)} rejected=${JSON.stringify(rejected)} response=${mailInfo.response}`
+            `[Holiday Inquiry SMTP Result] ref=${referenceId} from=${smtpUser} to=${toEmail} host=${smtpHost} accepted=${JSON.stringify(accepted)} rejected=${JSON.stringify(rejected)} response=${mailInfo.response}`
           );
 
           const webhookUrl = process.env.INQUIRY_WEBHOOK_URL?.trim();
@@ -305,6 +327,7 @@ async function startServer() {
             success: true,
             referenceId,
             emailSent: false,
+            reason: 'SMTP_DELIVERY_FAILED',
           });
         }
       }
@@ -322,6 +345,7 @@ async function startServer() {
         success: true,
         referenceId,
         emailSent,
+        reason: 'SMTP_NOT_CONFIGURED',
       });
     } catch {
       return res.status(500).json({ success: false });
