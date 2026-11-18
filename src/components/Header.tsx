@@ -92,13 +92,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
 
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
               <a
-                href="https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20want%20to%20book%20a%20flight%20ticket"
+                href="https://wa.me/17372904745?text=Hi%20Flyfello,%20I%20want%20to%20book%20a%20flight%20ticket"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full py-3 px-4 rounded-xl bg-[#122754] hover:bg-[#F58220] text-white text-xs font-bold flex items-center justify-center gap-2 text-center transition-colors shadow-sm"
               >
                 <MessageCircle className="w-4 h-4 text-[#F58220]" />
-                <span>Chat on WhatsApp: +1 (604) 832-6304</span>
+                <span>Chat on WhatsApp: +1 (737) 290-4745</span>
               </a>
             </div>
           </div>

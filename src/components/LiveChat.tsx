@@ -59,7 +59,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
       return {
         text: 'Payment is super easy and 100% secure! You can pay directly via WhatsApp using:\n• Canada: Interac e-Transfer (zero markup)\n• USA: Zelle / US Bank Wire / ACH\n• Credit / Debit Cards (Visa, MasterCard, Amex)\n• Easy monthly EMI plans\nOnce paid, your official airline PNR and e-ticket are sent in minutes.',
         quickActions: [
-          { label: 'Open WhatsApp Payment (+1 604-832-6304)', action: 'whatsapp' },
+          { label: 'Open WhatsApp Payment (+1 737-290-4745)', action: 'whatsapp' },
         ],
       };
     }
@@ -85,7 +85,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
     if (q.includes('whatsapp') || q.includes('contact') || q.includes('phone') || q.includes('number') || q.includes('call')) {
       return {
-        text: 'You can reach our live ticketing desk 24/7 on WhatsApp or phone at +1 (604) 832-6304 (WhatsApp link: Wa.me/16048326304). Email: flyfello@hotmail.com. We answer immediately!',
+        text: 'You can reach our live ticketing desk 24/7 on WhatsApp or phone at +1 (737) 290-4745 (WhatsApp link: Wa.me/17372904745). Email: info@flyfello.in. We answer immediately!',
         quickActions: [
           { label: 'Open WhatsApp Now', action: 'whatsapp' },
         ],
@@ -94,7 +94,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
     if (q.includes('emergency') || q.includes('urgent') || q.includes('today') || q.includes('tomorrow')) {
       return {
-        text: 'For last-minute or emergency travel within 24–48 hours, please message our emergency WhatsApp desk immediately at +1 (604) 832-6304. We hold emergency consolidated seats that are not publicly displayed online.',
+        text: 'For last-minute or emergency travel within 24–48 hours, please message our emergency WhatsApp desk immediately at +1 (737) 290-4745. We hold emergency consolidated seats that are not publicly displayed online.',
         quickActions: [
           { label: 'Emergency WhatsApp Contact', action: 'whatsapp' },
         ],
@@ -102,9 +102,9 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
     }
 
     return {
-      text: `Thank you for your question! For specific flight dates, group bookings, or instant ticket holds, our certified ticketing agent is standing by right now on WhatsApp (+1 604-832-6304) with direct airline inventory access.`,
+      text: `Thank you for your question! For specific flight dates, group bookings, or instant ticket holds, our certified ticketing agent is standing by right now on WhatsApp (+1 737-290-4745) with direct airline inventory access.`,
       quickActions: [
-        { label: 'Connect on WhatsApp (+1 604-832-6304)', action: 'whatsapp' },
+        { label: 'Connect on WhatsApp (+1 737-290-4745)', action: 'whatsapp' },
         { label: 'Check Baggage Rules', action: 'baggage' },
       ],
     };
@@ -141,7 +141,7 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
   const handleActionClick = (action: string) => {
     if (action === 'whatsapp') {
-      window.open('https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20am%20chatting%20on%20your%20website%20and%20need%20assistance%20with%20flights%20to%20India', '_blank');
+      window.open('https://wa.me/17372904745?text=Hi%20Flyfello,%20I%20am%20chatting%20on%20your%20website%20and%20need%20assistance%20with%20flights%20to%20India', '_blank');
       return;
     }
     if (action === 'inquiry') {
@@ -218,11 +218,11 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
             <div className="flex items-center gap-1">
               <a
-                href="https://wa.me/16048326304"
+                href="https://wa.me/17372904745"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-1.5 text-slate-400 hover:text-emerald-400 transition-colors"
-                title="Switch to WhatsApp (+1 604-832-6304)"
+                title="Switch to WhatsApp (+1 737-290-4745)"
               >
                 <Phone className="w-4 h-4" />
               </a>
@@ -238,9 +238,9 @@ export const LiveChat: React.FC<LiveChatProps> = ({ isOpen, onToggle }) => {
 
           {/* Quick Contact Banner */}
           <div className="bg-amber-50 px-3.5 py-1.5 border-b border-amber-100 flex items-center justify-between text-[11px] text-amber-900">
-            <span className="truncate">WhatsApp Ticket Desk: <strong>Wa.me/16048326304</strong></span>
+            <span className="truncate">WhatsApp Ticket Desk: <strong>Wa.me/17372904745</strong></span>
             <a
-              href="https://wa.me/16048326304"
+              href="https://wa.me/17372904745"
               target="_blank"
               rel="noopener noreferrer"
               className="font-bold underline text-amber-950 shrink-0 ml-2"

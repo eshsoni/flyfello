@@ -200,7 +200,7 @@ export const FlightQueryWhatsAppCard: React.FC<FlightQueryWhatsAppCardProps> = (
                   <Clock className="w-3 h-3 text-emerald-400" />
                   24/7 Agent Availability
                 </span>
-                <span>Phone: +1 (604) 832-6304</span>
+                <span>Phone: +1 (737) 290-4745</span>
               </div>
             </div>
           </div>

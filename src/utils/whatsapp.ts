@@ -39,7 +39,7 @@ export function buildWhatsAppFlightQueryUrl(params: SearchParams): string {
     `💵 *Currency:* ${params.currency}\n\n` +
     `Hello Flyfello team! Please share the lowest consolidated agent fares and seat availability for this route.`;
 
-  return `https://wa.me/16048326304?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/17372904745?text=${encodeURIComponent(text)}`;
 }
 
 export function buildWhatsAppRouteDealUrl(deal: {
@@ -63,5 +63,13 @@ export function buildWhatsAppRouteDealUrl(deal: {
     `🏷️ *Featured Rate:* From ${price} (1x 23kg Bag + 7kg Cabin)\n\n` +
     `Hi Flyfello! I would like to check available dates and book this route deal.`;
 
-  return `https://wa.me/16048326304?text=${encodeURIComponent(text)}`;
+  return `https://wa.me/17372904745?text=${encodeURIComponent(text)}`;
+}
+
+export const WHATSAPP_API_NUMBER = '17372904745';
+
+export function buildWhatsAppSupportUrl(
+  message = 'Hi Flyfello Support! I would like assistance with a flight booking.'
+): string {
+  return `https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(message)}`;
 }

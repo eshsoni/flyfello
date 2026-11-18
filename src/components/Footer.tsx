@@ -22,8 +22,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPage }) => {
             <div className="space-y-2.5 pt-2">
               <div className="flex items-center gap-2.5 text-slate-300">
                 <Mail className="w-4 h-4 text-[#F58220] shrink-0" />
-                <a href="mailto:flyfello@hotmail.com" className="hover:text-white transition-colors">
-                  flyfello@hotmail.com
+                <a href="mailto:info@flyfello.in" className="hover:text-white transition-colors">
+                  info@flyfello.in
                 </a>
               </div>
 
@@ -46,8 +46,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenPage }) => {
                     +91 87083 49822 (India)
                   </a>
                   <span className="text-slate-600">|</span>
-                  <a href="tel:+16048326304" className="hover:text-white transition-colors">
-                    +1 (604) 832-6304 (Canada)
+                  <a href="tel:+17372904745" className="hover:text-white transition-colors">
+                    +1 (737) 290-4745
                   </a>
                 </div>
               </div>

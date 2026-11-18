@@ -28,7 +28,7 @@ export const WhyFlyfello: React.FC = () => {
           {/* Left Column: Visual Asset & Core Promise (5 cols) */}
           <div className="lg:col-span-5 relative rounded-2xl border border-slate-200 overflow-hidden shadow-sm h-64 sm:h-72 lg:h-auto min-h-[220px]">
             <img
-              src="/assets/aistudio/image_edb1911e.png"
+              src="/assets/aistudio/image_689c70f2.png"
               alt="Comfortable international flight cabin"
               className="w-full h-full object-cover object-top sm:object-center"
               onError={(e) => {

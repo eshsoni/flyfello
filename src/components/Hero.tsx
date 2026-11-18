@@ -74,13 +74,13 @@ export const Hero: React.FC<HeroProps> = ({ onScrollToSearch, onOpenInquiry }) =
             </button>
 
             <a
-              href="https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20want%20to%20get%20a%20fare%20quote%20for%20flights%20to%20India"
+              href="https://wa.me/17372904745?text=Hi%20Flyfello,%20I%20want%20to%20get%20a%20fare%20quote%20for%20flights%20to%20India"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-white font-semibold text-sm sm:text-base border border-slate-700/80 transition-all flex items-center justify-center gap-2.5 whitespace-nowrap"
             >
               <MessageCircle className="w-4 h-4 text-emerald-400" />
-              <span>Instant WhatsApp Quote (+1 604-832-6304)</span>
+              <span>Instant WhatsApp Quote (+1 737-290-4745)</span>
             </a>
           </div>
 

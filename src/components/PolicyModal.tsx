@@ -185,7 +185,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
                     Get custom flight itinerary recommendations, live seat maps, and price holds directly on WhatsApp.
                   </p>
                   <a
-                    href="https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20have%20a%20question%20about%20flights"
+                    href="https://wa.me/17372904745?text=Hi%20Flyfello,%20I%20have%20a%20question%20about%20flights"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-sm transition-colors"
@@ -203,8 +203,8 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
                   <div className="space-y-2 text-xs">
                     <div>
                       <span className="font-semibold text-slate-500">Email:</span>{' '}
-                      <a href="mailto:flyfello@hotmail.com" className="font-bold text-[#122754] hover:text-[#F58220]">
-                        flyfello@hotmail.com
+                      <a href="mailto:info@flyfello.in" className="font-bold text-[#122754] hover:text-[#F58220]">
+                        info@flyfello.in
                       </a>
                     </div>
                     <div>
@@ -213,8 +213,8 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
                         +91 87083 49822 (India)
                       </a>
                       <span className="text-slate-400 mx-1.5">;</span>
-                      <a href="tel:+16048326304" className="font-bold text-[#122754] hover:text-[#F58220]">
-                        +1 (604) 832-6304 (Canada)
+                      <a href="tel:+17372904745" className="font-bold text-[#122754] hover:text-[#F58220]">
+                        +1 (737) 290-4745
                       </a>
                     </div>
                     <div>
@@ -628,8 +628,8 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
                   <h3 className="font-bold text-[#122754] text-base mb-2">6. Your Privacy Rights</h3>
                   <p>
                     Depending on your jurisdiction, you may have the right to request access to, correction of, or deletion of your personal data held by FlyFello (subject to legal and airline record-keeping requirements). To submit a privacy request, please contact us at{' '}
-                    <a href="mailto:flyfello@hotmail.com" className="text-[#F58220] underline">
-                      flyfello@hotmail.com
+                    <a href="mailto:info@flyfello.in" className="text-[#F58220] underline">
+                      info@flyfello.in
                     </a>.
                   </p>
                 </div>
@@ -666,7 +666,7 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200">
                   <div className="font-bold text-[#122754] mb-1">Need immediate human assistance?</div>
                   <p className="text-slate-600">
-                    Message our live ticketing desk on WhatsApp or call +91 87083 49822 (India) / +1 (604) 832-6304 (Canada) anytime 24/7.
+                    Message our live ticketing desk on WhatsApp or call +91 87083 49822 (India) / +1 (737) 290-4745 anytime 24/7.
                   </p>
                 </div>
               </div>
@@ -943,8 +943,8 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({ page, onClose, onNavig
               +91 87083 49822 (India)
             </a>
             <span className="mx-1.5 text-slate-300">|</span>
-            <a href="tel:+16048326304" className="text-[#122754] font-bold hover:underline">
-              +1 (604) 832-6304 (Canada)
+            <a href="tel:+17372904745" className="text-[#122754] font-bold hover:underline">
+              +1 (737) 290-4745
             </a>
           </div>
           <button

@@ -52,7 +52,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
       `📝 *Notes:* ${formData.notes || 'None'}\n\n` +
       `Please provide the lowest consolidated quote!`
     );
-    window.open(`https://wa.me/16048326304?text=${text}`, '_blank');
+    window.open(`https://wa.me/17372904745?text=${text}`, '_blank');
   };
 
   return (
@@ -76,7 +76,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                   Inquiry Received Successfully!
                 </h3>
                 <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto mt-2 leading-relaxed">
-                  Thank you, <strong>{formData.name}</strong>. Our ticketing desk at <strong>flyfello@hotmail.com</strong> has received your travel details and will check live agent seat allocations.
+                  Thank you, <strong>{formData.name}</strong>. Our ticketing desk at <strong>info@flyfello.in</strong> has received your travel details and will check live agent seat allocations.
                 </p>
               </div>
 
@@ -88,7 +88,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                   className="w-full py-3.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm rounded-xl transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <MessageCircle className="w-5 h-5 text-slate-950" />
-                  <span>Get Quote Right Now on WhatsApp (+1 604-832-6304)</span>
+                  <span>Get Quote Right Now on WhatsApp (+1 737-290-4745)</span>
                 </button>
 
                 <p className="text-[11px] text-slate-400">
@@ -144,7 +144,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                     <input
                       type="tel"
                       required
-                      placeholder="+1 (604) 000-0000"
+                      placeholder="+1 (737) 000-0000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full h-11 px-3.5 bg-slate-800/90 border border-slate-700 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-400"
@@ -357,7 +357,7 @@ export const InquiryForm: React.FC<InquiryFormProps> = ({ initialFlight, onClose
                 {/* Submit Action */}
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="text-xs text-slate-400">
-                    Direct agent hotline: <strong className="text-white">+1 (604) 832-6304</strong> · <strong className="text-slate-300">flyfello@hotmail.com</strong>
+                    Direct agent hotline: <strong className="text-white">+1 (737) 290-4745</strong> · <strong className="text-slate-300">info@flyfello.in</strong>
                   </div>
 
                   <button

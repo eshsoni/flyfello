@@ -15,7 +15,7 @@ export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
       <div className="flex items-center justify-around gap-1 max-w-md mx-auto">
         {/* WhatsApp Booking */}
         <a
-          href="https://wa.me/16048326304?text=Hi%20Flyfello,%20I%20want%20to%20book%20a%20flight%20ticket"
+          href="https://wa.me/17372904745?text=Hi%20Flyfello,%20I%20want%20to%20book%20a%20flight%20ticket"
           target="_blank"
           rel="noopener noreferrer"
           className="flex-1 py-1.5 px-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg flex flex-col items-center justify-center text-center transition-colors"
@@ -29,14 +29,14 @@ export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
 
         {/* Call Agent */}
         <a
-          href="tel:+16048326304"
+          href="tel:+17372904745"
           className="flex-1 py-1.5 px-2 bg-slate-800 hover:bg-slate-700 rounded-lg flex flex-col items-center justify-center text-center transition-colors"
         >
           <div className="flex items-center gap-1 font-semibold text-xs text-amber-400">
             <Phone className="w-3.5 h-3.5" />
             <span>Call Desk</span>
           </div>
-          <span className="text-[9px] text-slate-400">604-832-6304</span>
+          <span className="text-[9px] text-slate-400">737-290-4745</span>
         </a>
 
         {/* Search Flights */}

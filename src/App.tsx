@@ -8,6 +8,7 @@ import { InstagramSection } from './components/InstagramSection';
 import { Footer } from './components/Footer';
 import { PolicyModal, PolicyPageType } from './components/PolicyModal';
 import { CookieConsent } from './components/CookieConsent';
+import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PolicyPageType | null>(null);
@@ -142,6 +143,9 @@ export default function App() {
           onNavigate={(page) => handleOpenPage(page)}
         />
       )}
+
+      {/* Floating WhatsApp Support Button */}
+      <WhatsAppFloatingButton />
 
       {/* Cookie Consent Pop-up (Always opens on every page load) */}
       <CookieConsent onOpenPolicy={handleOpenPage} />
