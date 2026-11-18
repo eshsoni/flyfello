@@ -148,15 +148,24 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
     let didSendEmail = false;
     let reason: string | null = null;
 
-    const payload = JSON.stringify({
-      ...form,
+    const parsedPayload = {
+      referenceId: ref,
       fullName: form.fullName.trim(),
       phone: form.phone.trim(),
       email: form.email.trim(),
       departureCity: form.departureCity.trim(),
       destination: resolvedDestination,
+      packageType: form.packageType,
+      travelDate: form.travelDate,
+      nights: form.nights,
+      adults: form.adults,
+      children: form.children,
+      hotelCategory: form.hotelCategory,
+      includeFlights: form.includeFlights,
+      budget: form.budget,
       notes: form.notes.trim(),
-    });
+    };
+    const payload = JSON.stringify(parsedPayload);
 
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
@@ -176,9 +185,57 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
           break;
         } else {
           reason = `SERVER_HTTP_${response.status}`;
+          if (response.status === 404) {
+            break;
+          }
         }
       } catch {
         reason = 'NETWORK_UNREACHABLE';
+      }
+    }
+
+    // Static-hosting / fallback delivery: forward to VITE_INQUIRY_WEBHOOK_URL or Formspree endpoint if backend route is unavailable or email wasn't sent
+    const envWebhook = (import.meta.env.VITE_INQUIRY_WEBHOOK_URL as string | undefined)?.trim();
+    const fallbackWebhook =
+      envWebhook && envWebhook !== 'MY_INQUIRY_WEBHOOK_URL'
+        ? envWebhook
+        : 'https://formspree.io/f/xaeojlae';
+
+    if (!didSendEmail && fallbackWebhook) {
+      try {
+        const webhookPayload = {
+          _subject: `New Holiday Inquiry (${ref}) - ${resolvedDestination} | ${parsedPayload.fullName}`,
+          _replyto: parsedPayload.email,
+          referenceId: ref,
+          fullName: parsedPayload.fullName,
+          phone: parsedPayload.phone,
+          email: parsedPayload.email,
+          departureCity: parsedPayload.departureCity,
+          destination: parsedPayload.destination,
+          departureDate: parsedPayload.travelDate,
+          tripDuration: parsedPayload.nights,
+          holidayType: parsedPayload.packageType,
+          travelers: `${parsedPayload.adults} Adult(s), ${parsedPayload.children} Child(ren)`,
+          hotelCategory: parsedPayload.hotelCategory,
+          packageWithFlightTicket: parsedPayload.includeFlights ? 'Yes' : 'No (Land Package Only)',
+          estimatedBudget: parsedPayload.budget,
+          additionalRequests: parsedPayload.notes,
+        };
+        const webhookRes = await fetch(fallbackWebhook, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(webhookPayload),
+        });
+        const webhookData = await webhookRes.json().catch(() => null);
+        if (webhookRes.ok && webhookData?.ok !== false) {
+          didSendEmail = true;
+          reason = null;
+        }
+      } catch {
+        // Keep original failure reason so fallback buttons remain visible
       }
     }
 
@@ -298,7 +355,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                 </div>
 
                 {!emailSent && (
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-xl mx-auto">
                     <button
                       type="button"
                       disabled={submitting}
@@ -324,6 +381,17 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                     >
                       <MessageCircle className="w-4 h-4" />
                       <span>Send via WhatsApp</span>
+                    </a>
+                    <a
+                      href={`mailto:info@flyfello.in?subject=${encodeURIComponent(
+                        `Holiday Booking Inquiry (${referenceId}) - ${resolvedDestination}`
+                      )}&body=${encodeURIComponent(
+                        `Holiday Inquiry Ref: ${referenceId}\nName: ${form.fullName}\nPhone: ${form.phone}\nEmail: ${form.email}\nDeparture City: ${form.departureCity}\nDestination: ${resolvedDestination}\nDate: ${form.travelDate} (${form.nights})\nHoliday Type: ${form.packageType}\nTravelers: ${form.adults} Adult(s), ${form.children} Child(ren)\nHotel Category: ${form.hotelCategory}\nPackage with Flight Ticket: ${form.includeFlights ? 'Yes' : 'No (Land Package Only)'}\nBudget: ${form.budget}\nNotes: ${form.notes}`
+                      )}`}
+                      className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-[#122754] font-bold text-xs sm:text-sm flex items-center justify-center gap-2"
+                    >
+                      <Mail className="w-4 h-4" />
+                      <span>Send via Email</span>
                     </a>
                   </div>
                 )}
