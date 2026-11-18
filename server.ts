@@ -266,19 +266,46 @@ async function startServer() {
             </div>
           `;
 
-          await transporter.sendMail({
+          const mailInfo = await transporter.sendMail({
             from: `"FlyFello Holiday Desk" <${smtpUser}>`,
             to: toEmail,
             ...(payload.email ? { replyTo: String(payload.email) } : {}),
             subject: `Holiday Inquiry (${referenceId}) - ${payload.destination || 'Package'} | ${payload.fullName || 'Customer'}`,
             text: textBody,
             html: htmlBody,
+            headers: {
+              'X-Entity-Ref-ID': referenceId,
+            },
           });
 
-          emailSent = true;
-          console.log(`[Holiday Inquiry Emailed] ${referenceId} -> ${toEmail} via ${smtpHost}:${smtpPort}`);
-        } catch (smtpError) {
+          const accepted = Array.isArray(mailInfo.accepted) ? mailInfo.accepted.map(String) : [];
+          const rejected = Array.isArray(mailInfo.rejected) ? mailInfo.rejected.map(String) : [];
+          emailSent = accepted.length > 0;
+          console.log(
+            `[Holiday Inquiry SMTP Result] ref=${referenceId} from=${smtpUser} to=${toEmail} host=${smtpHost}:${smtpPort} accepted=${JSON.stringify(accepted)} rejected=${JSON.stringify(rejected)} response=${mailInfo.response}`
+          );
+
+          const webhookUrl = process.env.INQUIRY_WEBHOOK_URL?.trim();
+          if (webhookUrl && webhookUrl !== 'MY_INQUIRY_WEBHOOK_URL') {
+            await fetch(webhookUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ...record, emailSent }),
+            });
+          }
+
+          return res.json({
+            success: true,
+            referenceId,
+            emailSent,
+          });
+        } catch (smtpError: any) {
           console.error('[Holiday Inquiry SMTP Error]', smtpError);
+          return res.json({
+            success: true,
+            referenceId,
+            emailSent: false,
+          });
         }
       }
 
@@ -291,7 +318,11 @@ async function startServer() {
         });
       }
 
-      return res.json({ success: true, referenceId, emailSent });
+      return res.json({
+        success: true,
+        referenceId,
+        emailSent,
+      });
     } catch {
       return res.status(500).json({ success: false });
     }

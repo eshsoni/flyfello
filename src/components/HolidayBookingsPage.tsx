@@ -13,6 +13,8 @@ import {
   Send,
   Phone,
   Sparkles,
+  Loader2,
+  AlertCircle,
 } from 'lucide-react';
 import { FlyfelloLogo } from './FlyfelloLogo';
 import { WHATSAPP_API_NUMBER } from '../utils/whatsapp';
@@ -71,14 +73,79 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
   const [submitting, setSubmitting] = useState(false);
   const [referenceId, setReferenceId] = useState<string | null>(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [errors, setErrors] = useState<Partial<Record<keyof HolidayFormState, string>>>({});
 
   const resolvedDestination =
     form.destination === 'Other'
       ? form.otherDestination.trim() || 'Other'
       : form.destination;
 
+  const updateField = <K extends keyof HolidayFormState>(
+    field: K,
+    value: HolidayFormState[K]
+  ) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  };
+
+  const validateForm = (): boolean => {
+    const nextErrors: Partial<Record<keyof HolidayFormState, string>> = {};
+
+    if (form.fullName.trim().length < 2) {
+      nextErrors.fullName = 'Please enter your full name.';
+    }
+    const phoneDigits = form.phone.replace(/\D/g, '');
+    if (phoneDigits.length < 7) {
+      nextErrors.phone = 'Please enter a valid WhatsApp / phone number.';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      nextErrors.email = 'Please enter a valid email address.';
+    }
+    if (!form.departureCity.trim()) {
+      nextErrors.departureCity = 'Please enter your departure city.';
+    }
+    if (!form.destination.trim()) {
+      nextErrors.destination = 'Please select a holiday destination.';
+    }
+    if (form.destination === 'Other' && !form.otherDestination.trim()) {
+      nextErrors.otherDestination = 'Please enter your destination.';
+    }
+    if (!form.travelDate.trim()) {
+      nextErrors.travelDate = 'Please select a departure date.';
+    }
+    if (!form.nights.trim()) {
+      nextErrors.nights = 'Please select trip duration.';
+    }
+    if (!form.packageType.trim()) {
+      nextErrors.packageType = 'Please select a holiday type.';
+    }
+    if (!form.adults || form.adults < 1) {
+      nextErrors.adults = 'Please select at least 1 adult.';
+    }
+    if (!form.hotelCategory.trim()) {
+      nextErrors.hotelCategory = 'Please select a hotel category.';
+    }
+    if (!form.budget.trim()) {
+      nextErrors.budget = 'Please select an estimated budget.';
+    }
+    if (!form.notes.trim()) {
+      nextErrors.notes = "Please fill in additional requests (or type 'None').";
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    if (!validateForm()) return;
+
     setSubmitting(true);
     let ref = `FF-HOL-${Math.floor(100000 + Math.random() * 900000)}`;
     let didSendEmail = false;
@@ -89,7 +156,12 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          fullName: form.fullName.trim(),
+          phone: form.phone.trim(),
+          email: form.email.trim(),
+          departureCity: form.departureCity.trim(),
           destination: resolvedDestination,
+          notes: form.notes.trim(),
         }),
       });
       if (response.ok) {
@@ -176,7 +248,13 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
           <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
             {referenceId ? (
               <div className="p-8 sm:p-12 text-center space-y-6">
-                <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto">
+                <div
+                  className={`w-16 h-16 rounded-2xl border flex items-center justify-center mx-auto ${
+                    emailSent
+                      ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                      : 'bg-amber-50 text-amber-600 border-amber-200'
+                  }`}
+                >
                   <CheckCircle2 className="w-9 h-9" />
                 </div>
 
@@ -185,7 +263,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                     Holiday Inquiry Ref #{referenceId}
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-[#122754] mt-3">
-                    {emailSent ? 'Holiday Inquiry Sent!' : 'Your Holiday Query Is Ready!'}
+                    {emailSent ? 'Holiday Inquiry Sent!' : 'Holiday Inquiry Logged (Email Pending)'}
                   </h2>
                   <p className="text-sm text-slate-600 max-w-xl mx-auto mt-2">
                     {emailSent ? (
@@ -197,7 +275,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                     ) : (
                       <>
                         Thank you, <strong>{form.fullName}</strong>. Your inquiry for{' '}
-                        <strong>{resolvedDestination}</strong> has been received. Our travel specialists will contact you shortly.
+                        <strong>{resolvedDestination}</strong> was logged on the server, but SMTP email delivery could not complete right now. Please message us on WhatsApp at <strong>+1 (737) 290-4745</strong> for immediate help.
                       </>
                     )}
                   </p>
@@ -215,7 +293,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-6">
+              <form onSubmit={handleSubmit} noValidate className="p-6 sm:p-10 space-y-6">
                 {/* Contact Details */}
                 <div>
                   <h2 className="text-sm font-extrabold text-[#122754] uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -232,9 +310,16 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         required
                         placeholder="e.g. Amanpreet Singh"
                         value={form.fullName}
-                        onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-                        className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                        onChange={(e) => updateField('fullName', e.target.value)}
+                        className={`w-full h-11 px-3.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                          errors.fullName
+                            ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                            : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                        }`}
                       />
+                      {errors.fullName && (
+                        <p className="mt-1 text-xs font-medium text-rose-600">{errors.fullName}</p>
+                      )}
                     </div>
 
                     <div>
@@ -246,9 +331,16 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         required
                         placeholder="+91 98765 43210 / +1 ..."
                         value={form.phone}
-                        onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                        className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                        onChange={(e) => updateField('phone', e.target.value)}
+                        className={`w-full h-11 px-3.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                          errors.phone
+                            ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                            : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                        }`}
                       />
+                      {errors.phone && (
+                        <p className="mt-1 text-xs font-medium text-rose-600">{errors.phone}</p>
+                      )}
                     </div>
 
                     <div>
@@ -260,9 +352,16 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         required
                         placeholder="name@email.com"
                         value={form.email}
-                        onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                        onChange={(e) => updateField('email', e.target.value)}
+                        className={`w-full h-11 px-3.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                          errors.email
+                            ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                            : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                        }`}
                       />
+                      {errors.email && (
+                        <p className="mt-1 text-xs font-medium text-rose-600">{errors.email}</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -282,9 +381,16 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         type="text"
                         required
                         value={form.departureCity}
-                        onChange={(e) => setForm({ ...form, departureCity: e.target.value })}
-                        className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                        onChange={(e) => updateField('departureCity', e.target.value)}
+                        className={`w-full h-11 px-3.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                          errors.departureCity
+                            ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                            : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                        }`}
                       />
+                      {errors.departureCity && (
+                        <p className="mt-1 text-xs font-medium text-rose-600">{errors.departureCity}</p>
+                      )}
                     </div>
 
                     <div>
@@ -293,7 +399,12 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                       </label>
                       <select
                         value={form.destination}
-                        onChange={(e) => setForm({ ...form, destination: e.target.value })}
+                        onChange={(e) => {
+                          updateField('destination', e.target.value);
+                          if (e.target.value !== 'Other') {
+                            updateField('otherDestination', '');
+                          }
+                        }}
                         className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
                       >
                         {POPULAR_HOLIDAY_DESTINATIONS.map((dest) => (
@@ -303,15 +414,26 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         ))}
                       </select>
                       {form.destination === 'Other' && (
-                        <input
-                          type="text"
-                          required
-                          placeholder="Enter destination..."
-                          aria-label="Other Holiday Destination"
-                          value={form.otherDestination}
-                          onChange={(e) => setForm({ ...form, otherDestination: e.target.value })}
-                          className="mt-2 w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
-                        />
+                        <>
+                          <input
+                            type="text"
+                            required
+                            placeholder="Enter destination..."
+                            aria-label="Other Holiday Destination"
+                            value={form.otherDestination}
+                            onChange={(e) => updateField('otherDestination', e.target.value)}
+                            className={`mt-2 w-full h-11 px-3.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                              errors.otherDestination
+                                ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                                : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                            }`}
+                          />
+                          {errors.otherDestination && (
+                            <p className="mt-1 text-xs font-medium text-rose-600">
+                              {errors.otherDestination}
+                            </p>
+                          )}
+                        </>
                       )}
                     </div>
 
@@ -324,18 +446,25 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                         type="date"
                         required
                         value={form.travelDate}
-                        onChange={(e) => setForm({ ...form, travelDate: e.target.value })}
-                        className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                        onChange={(e) => updateField('travelDate', e.target.value)}
+                        className={`w-full h-11 px-3 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                          errors.travelDate
+                            ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                            : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                        }`}
                       />
+                      {errors.travelDate && (
+                        <p className="mt-1 text-xs font-medium text-rose-600">{errors.travelDate}</p>
+                      )}
                     </div>
 
                     <div>
                       <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                        Trip Duration
+                        Trip Duration *
                       </label>
                       <select
                         value={form.nights}
-                        onChange={(e) => setForm({ ...form, nights: e.target.value })}
+                        onChange={(e) => updateField('nights', e.target.value)}
                         className="w-full h-11 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
                       >
                         <option value="3 Nights / 4 Days">3 Nights / 4 Days</option>
@@ -474,16 +603,34 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                 {/* Notes */}
                 <div className="pt-4 border-t border-slate-100">
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Additional Requests (Sightseeing, Meals, Visa Assistance, Airport Transfers)
+                    Additional Requests (Sightseeing, Meals, Visa Assistance, Airport Transfers) *
                   </label>
                   <textarea
                     rows={3}
-                    placeholder="Tell us preferred hotels, sightseeing tours, meal preferences (Veg/Jain), or visa help..."
+                    required
+                    placeholder="Tell us preferred hotels, sightseeing tours, meal preferences (Veg/Jain), visa help, or write 'None'..."
                     value={form.notes}
-                    onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#F58220]/40 focus:border-[#F58220]"
+                    onChange={(e) => updateField('notes', e.target.value)}
+                    className={`w-full px-3.5 py-2.5 border rounded-xl text-sm text-slate-900 focus:outline-none focus:ring-2 ${
+                      errors.notes
+                        ? 'bg-rose-50/40 border-rose-400 focus:ring-rose-400/40 focus:border-rose-500'
+                        : 'bg-slate-50 border-slate-200 focus:ring-[#F58220]/40 focus:border-[#F58220]'
+                    }`}
                   />
+                  {errors.notes && (
+                    <p className="mt-1 text-xs font-medium text-rose-600">{errors.notes}</p>
+                  )}
                 </div>
+
+                {Object.keys(errors).length > 0 && (
+                  <div
+                    role="alert"
+                    className="flex items-center gap-2 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-xs sm:text-sm font-medium text-rose-700"
+                  >
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+                    <span>Please complete all highlighted fields before submitting your holiday request.</span>
+                  </div>
+                )}
 
                 {/* Submit Bar */}
                 <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -501,10 +648,20 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#122754] hover:bg-[#F58220] text-white font-extrabold text-sm shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                    aria-busy={submitting}
+                    className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#122754] hover:bg-[#F58220] text-white font-extrabold text-sm shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#122754]"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>{submitting ? 'Submitting...' : 'Submit Holiday Request'}</span>
+                    {submitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Holiday Request</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
