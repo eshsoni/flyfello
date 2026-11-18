@@ -9,9 +9,15 @@ import { Footer } from './components/Footer';
 import { PolicyModal, PolicyPageType } from './components/PolicyModal';
 import { CookieConsent } from './components/CookieConsent';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
+import { HolidayBookingsPage } from './components/HolidayBookingsPage';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PolicyPageType | null>(null);
+  const [isHolidayPage, setIsHolidayPage] = useState<boolean>(() => {
+    const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    return queryPage === 'holiday-bookings' || hash === 'holiday-bookings';
+  });
 
   const [searchParams, setSearchParams] = useState<SearchParams>({
     origin: 'YVR',
@@ -42,16 +48,22 @@ export default function App() {
       'refund',
       'baggage',
     ];
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '').toLowerCase() as PolicyPageType;
-      if (validPages.includes(hash)) {
-        setActivePage(hash);
+    const handleRouteSync = () => {
+      const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
+      const hash = window.location.hash.replace('#', '').toLowerCase() as PolicyPageType | 'holiday-bookings';
+      setIsHolidayPage(queryPage === 'holiday-bookings' || hash === 'holiday-bookings');
+      if (validPages.includes(hash as PolicyPageType)) {
+        setActivePage(hash as PolicyPageType);
       }
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleRouteSync();
+    window.addEventListener('hashchange', handleRouteSync);
+    window.addEventListener('popstate', handleRouteSync);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteSync);
+      window.removeEventListener('popstate', handleRouteSync);
+    };
   }, []);
 
   // Dynamic canonical URL, og:url, and page title management for SEO
@@ -88,10 +100,14 @@ export default function App() {
       refund: 'Refund Policy | FlyFello',
       baggage: 'Baggage Information | FlyFello',
     };
+    if (isHolidayPage) {
+      document.title = 'Holiday Bookings | FlyFello';
+      return;
+    }
     document.title = activePage
       ? pageTitles[activePage]
       : 'FlyFello – Discounted USA & Canada to India Flights';
-  }, [activePage]);
+  }, [activePage, isHolidayPage]);
 
   const handleOpenPage = (page: PolicyPageType) => {
     setActivePage(page);
@@ -105,14 +121,35 @@ export default function App() {
     }
   };
 
+  const handleOpenHolidayBookings = () => {
+    window.history.pushState(null, '', '/?page=holiday-bookings');
+    setActivePage(null);
+    setIsHolidayPage(true);
+    window.scrollTo({ top: 0 });
+  };
+
+  const handleBackToHome = () => {
+    window.history.pushState(null, '', '/');
+    setIsHolidayPage(false);
+    setActivePage(null);
+    window.scrollTo({ top: 0 });
+  };
+
   const handleSearch = (newParams: SearchParams) => {
     setSearchParams(newParams);
   };
 
+  if (isHolidayPage) {
+    return <HolidayBookingsPage onBackToHome={handleBackToHome} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
       {/* Top Navigation Header & Air Suvidha Notice */}
-      <Header onOpenPage={handleOpenPage} />
+      <Header
+        onOpenPage={handleOpenPage}
+        onOpenHolidayBookings={handleOpenHolidayBookings}
+      />
 
       {/* Main Content Sections */}
       <main className="flex-1">

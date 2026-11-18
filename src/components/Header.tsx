@@ -6,9 +6,10 @@ import { PolicyPageType } from './PolicyModal';
 interface HeaderProps {
   onOpenChat?: () => void;
   onOpenPage?: (page: PolicyPageType) => void;
+  onOpenHolidayBookings?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenPage, onOpenHolidayBookings }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -26,14 +27,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
 
           {/* Zone 2: Navigation Links */}
           <nav className="hidden lg:flex items-center gap-7 text-sm font-semibold text-slate-700">
-            <a href="#flight-search" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
-              Search Flights
-            </a>
-            <a href="#why-flyfello" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
-              Why Flyfello
-            </a>
-            <a href="#testimonials" className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0">
-              Verified Reviews
+            <a
+              href="/?page=holiday-bookings"
+              onClick={(e) => {
+                if (onOpenHolidayBookings && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+                  e.preventDefault();
+                  onOpenHolidayBookings();
+                }
+              }}
+              className="hover:text-[#F58220] transition-colors whitespace-nowrap shrink-0"
+            >
+              Holiday Bookings
             </a>
             <button
               type="button"
@@ -68,26 +72,38 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPage }) => {
           <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-5 space-y-3 shadow-lg">
             <nav className="flex flex-col space-y-2 text-sm font-medium text-slate-700">
               <a
-                href="#flight-search"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors"
+                href="/?page=holiday-bookings"
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  if (onOpenHolidayBookings && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+                    e.preventDefault();
+                    onOpenHolidayBookings();
+                  }
+                }}
+                className="py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors block"
               >
-                Search Flights & Real-time Fares
+                Holiday Bookings
               </a>
-              <a
-                href="#why-flyfello"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors"
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenPage?.('about');
+                }}
+                className="text-left py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors cursor-pointer"
               >
-                Why Flyfello & 1x/2x 23kg + 7kg Cabin Baggage
-              </a>
-              <a
-                href="#testimonials"
-                onClick={() => setMobileMenuOpen(false)}
-                className="py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors"
+                About Us
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenPage?.('contact');
+                }}
+                className="text-left py-2 px-3 rounded-md hover:bg-orange-50 hover:text-[#F58220] transition-colors cursor-pointer"
               >
-                Customer Testimonials
-              </a>
+                Contact Us
+              </button>
             </nav>
 
             <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
