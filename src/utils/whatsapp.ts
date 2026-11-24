@@ -73,3 +73,114 @@ export function buildWhatsAppSupportUrl(
 ): string {
   return `https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(message)}`;
 }
+
+export interface HotelWhatsAppInquiry {
+  hotelName: string;
+  destination: string;
+  roomType: string;
+  mealPlan: string;
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  rooms: number;
+  adults: number;
+  children: number;
+  fullName: string;
+  phone: string;
+  email: string;
+  specialRequests?: string;
+}
+
+export function buildWhatsAppHotelQueryUrl(inquiry: HotelWhatsAppInquiry): string {
+  const text =
+    `🏨 *FlyFello Hotel Booking Query*\n\n` +
+    `✨ *Hotel / Property:* ${inquiry.hotelName}\n` +
+    `📍 *Destination:* ${inquiry.destination}\n` +
+    `🛏️ *Room Type:* ${inquiry.roomType}\n` +
+    `🍽️ *Meal Plan:* ${inquiry.mealPlan}\n` +
+    `📅 *Check-in:* ${inquiry.checkIn}\n` +
+    `📅 *Check-out:* ${inquiry.checkOut} (${inquiry.nights} Night${inquiry.nights === 1 ? '' : 's'})\n` +
+    `👥 *Occupancy:* ${inquiry.rooms} Room${inquiry.rooms > 1 ? 's' : ''} · ${inquiry.adults} Adult${inquiry.adults > 1 ? 's' : ''}` +
+    (inquiry.children > 0 ? `, ${inquiry.children} Child${inquiry.children > 1 ? 'ren' : ''}` : '') +
+    `\n\n👤 *Guest Name:* ${inquiry.fullName}\n` +
+    `📱 *Phone / WhatsApp:* ${inquiry.phone}\n` +
+    `✉️ *Email:* ${inquiry.email}\n` +
+    (inquiry.specialRequests?.trim() ? `📝 *Special Requests:* ${inquiry.specialRequests.trim()}\n` : '') +
+    `\nHi FlyFello team! Please share room availability and your best wholesale hotel rates for these dates.`;
+
+  return `https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+export interface VisaWhatsAppInquiry {
+  country: string;
+  visaType: string;
+  nationality: string;
+  travelDate: string;
+  applicants: number;
+  departureCity: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  notes?: string;
+}
+
+export function buildWhatsAppVisaQueryUrl(inquiry: VisaWhatsAppInquiry): string {
+  const text =
+    `🛂 *FlyFello Visa Assistance Inquiry*\n\n` +
+    `🌍 *Destination Country:* ${inquiry.country}\n` +
+    `📄 *Visa Category:* ${inquiry.visaType}\n` +
+    `🪪 *Passport Nationality:* ${inquiry.nationality}\n` +
+    `🛫 *Departure City:* ${inquiry.departureCity}\n` +
+    `🗓️ *Intended Travel Date:* ${inquiry.travelDate}\n` +
+    `👥 *Applicants:* ${inquiry.applicants}\n\n` +
+    `👤 *Applicant Name:* ${inquiry.fullName}\n` +
+    `📱 *Phone / WhatsApp:* ${inquiry.phone}\n` +
+    `✉️ *Email:* ${inquiry.email}\n` +
+    (inquiry.notes?.trim() ? `📝 *Notes:* ${inquiry.notes.trim()}\n` : '') +
+    `\nHi FlyFello Visa Desk! Please share the document checklist, visa fees, and processing timeline.`;
+
+  return `https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+export interface EsimWhatsAppInquiry {
+  destination: string;
+  planName: string;
+  dataAllowance: string;
+  validity: string;
+  travelDate: string;
+  deviceModel: string;
+  quantity: number;
+  fullName: string;
+  phone: string;
+  email: string;
+  notes?: string;
+}
+
+export function buildWhatsAppEsimQueryUrl(inquiry: EsimWhatsAppInquiry): string {
+  const text =
+    `📶 *FlyFello International eSIM Order / Inquiry*\n\n` +
+    `🌍 *Destination / Region:* ${inquiry.destination}\n` +
+    `📦 *Selected Plan:* ${inquiry.planName} (${inquiry.dataAllowance} · ${inquiry.validity})\n` +
+    `🔢 *Quantity:* ${inquiry.quantity} eSIM${inquiry.quantity > 1 ? 's' : ''}\n` +
+    `🗓️ *Travel Start Date:* ${inquiry.travelDate}\n` +
+    `📱 *Phone Model:* ${inquiry.deviceModel}\n\n` +
+    `👤 *Name:* ${inquiry.fullName}\n` +
+    `💬 *WhatsApp Number:* ${inquiry.phone}\n` +
+    `✉️ *Email:* ${inquiry.email}\n` +
+    (inquiry.notes?.trim() ? `📝 *Notes:* ${inquiry.notes.trim()}\n` : '') +
+    `\nHi FlyFello team! Please share activation details and payment instructions for this travel eSIM.`;
+
+  return `https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+export function triggerWhatsAppLink(url: string): void {
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.target = '_blank';
+  anchor.rel = 'noopener noreferrer';
+  anchor.style.display = 'none';
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+}
+

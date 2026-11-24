@@ -19,6 +19,7 @@ import {
 import { FlyfelloLogo } from './FlyfelloLogo';
 import { WHATSAPP_API_NUMBER } from '../utils/whatsapp';
 import { WhatsAppFloatingButton } from './WhatsAppFloatingButton';
+import { TopInternationalDestinations } from './TopInternationalDestinations';
 
 interface HolidayFormState {
   fullName: string;
@@ -49,9 +50,13 @@ const POPULAR_HOLIDAY_DESTINATIONS = [
 
 interface HolidayBookingsPageProps {
   onBackToHome?: () => void;
+  embedded?: boolean;
 }
 
-export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBackToHome }) => {
+export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({
+  onBackToHome,
+  embedded = false,
+}) => {
   const [form, setForm] = useState<HolidayFormState>({
     fullName: '',
     phone: '',
@@ -253,27 +258,10 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Top Bar */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
-          <a
-            href="/"
-            onClick={(e) => {
-              if (onBackToHome && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
-                e.preventDefault();
-                onBackToHome();
-              }
-            }}
-            className="flex items-center shrink-0"
-          >
-            <FlyfelloLogo
-              size="md"
-              imgClassName="h-10 sm:h-12 w-auto max-w-[200px] object-contain"
-            />
-          </a>
-
-          <div className="flex items-center gap-3">
+    <div className={embedded ? 'flex-1 bg-slate-50 flex flex-col text-slate-900 font-["Plus_Jakarta_Sans",sans-serif]' : 'min-h-screen bg-slate-50 flex flex-col text-slate-900 font-["Plus_Jakarta_Sans",sans-serif]'}>
+      {!embedded && (
+        <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
             <a
               href="/"
               onClick={(e) => {
@@ -282,23 +270,41 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
                   onBackToHome();
                 }
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 hover:border-[#F58220] text-xs sm:text-sm font-bold text-[#122754] hover:text-[#F58220] transition-colors"
+              className="flex items-center shrink-0"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Flight Search</span>
+              <FlyfelloLogo
+                size="md"
+                imgClassName="h-10 sm:h-12 w-auto max-w-[200px] object-contain"
+              />
             </a>
-            <a
-              href={`https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent('Hi Flyfello! I would like to inquire about a holiday package.')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>WhatsApp Desk</span>
-            </a>
+
+            <div className="flex items-center gap-3">
+              <a
+                href="/"
+                onClick={(e) => {
+                  if (onBackToHome && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
+                    e.preventDefault();
+                    onBackToHome();
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 hover:border-[#F58220] text-xs sm:text-sm font-bold text-[#122754] hover:text-[#F58220] transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                <span>Flight Search</span>
+              </a>
+              <a
+                href={`https://wa.me/${WHATSAPP_API_NUMBER}?text=${encodeURIComponent('Hi Flyfello! I would like to inquire about a holiday package.')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold shadow-xs transition-colors"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>WhatsApp Desk</span>
+              </a>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* Main Content */}
       <main className="flex-1 py-10 sm:py-14 px-4 sm:px-6 lg:px-8">
@@ -316,6 +322,8 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
               Submit your holiday travel details below for tailored flight + hotel packages, airport transfers, sightseeing, and visa guidance.
             </p>
           </div>
+
+          <TopInternationalDestinations compact onBackToHome={onBackToHome} />
 
           <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
             {referenceId ? (
@@ -793,7 +801,7 @@ export const HolidayBookingsPage: React.FC<HolidayBookingsPageProps> = ({ onBack
         </div>
       </main>
 
-      <WhatsAppFloatingButton />
+      {!embedded && <WhatsAppFloatingButton />}
     </div>
   );
 };

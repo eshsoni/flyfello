@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SearchParams } from './types';
-import { Header } from './components/Header';
+import { Header, ServicePageType } from './components/Header';
 import { FlightSearch } from './components/FlightSearch';
 import { WhyFlyfello } from './components/WhyFlyfello';
 import { Testimonials } from './components/Testimonials';
@@ -10,14 +10,50 @@ import { PolicyModal, PolicyPageType } from './components/PolicyModal';
 import { CookieConsent } from './components/CookieConsent';
 import { WhatsAppFloatingButton } from './components/WhatsAppFloatingButton';
 import { HolidayBookingsPage } from './components/HolidayBookingsPage';
+import { HotelsPage } from './components/HotelsPage';
+import { VisaPage } from './components/VisaPage';
+import { EsimPage } from './components/EsimPage';
+import { TopInternationalDestinations } from './components/TopInternationalDestinations';
+
+function resolveServiceFromLocation(): ServicePageType {
+  const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
+  const hash = window.location.hash.replace('#', '').toLowerCase();
+
+  if (queryPage === 'hotels' || hash === 'hotels') return 'hotels';
+  if (
+    queryPage === 'holiday-bookings' ||
+    queryPage === 'holidays' ||
+    hash === 'holiday-bookings' ||
+    hash === 'holidays'
+  ) {
+    return 'holidays';
+  }
+  if (queryPage === 'visa' || hash === 'visa') return 'visa';
+  if (queryPage === 'esim' || hash === 'esim') return 'esim';
+  return 'flights';
+}
+
+function getPathForService(service: ServicePageType): string {
+  switch (service) {
+    case 'hotels':
+      return '/?page=hotels';
+    case 'holidays':
+      return '/?page=holiday-bookings';
+    case 'visa':
+      return '/?page=visa';
+    case 'esim':
+      return '/?page=esim';
+    case 'flights':
+    default:
+      return '/';
+  }
+}
 
 export default function App() {
   const [activePage, setActivePage] = useState<PolicyPageType | null>(null);
-  const [isHolidayPage, setIsHolidayPage] = useState<boolean>(() => {
-    const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
-    const hash = window.location.hash.replace('#', '').toLowerCase();
-    return queryPage === 'holiday-bookings' || hash === 'holiday-bookings';
-  });
+  const [currentService, setCurrentService] = useState<ServicePageType>(() =>
+    resolveServiceFromLocation()
+  );
 
   const [searchParams, setSearchParams] = useState<SearchParams>({
     origin: 'YVR',
@@ -33,9 +69,9 @@ export default function App() {
     currency: 'INR',
   });
 
-  // Support direct URL hash linking (e.g. #privacy, #refund, #about, #contact, #help, etc.)
+  // Support direct URL query & hash linking across Flights, Hotels, Holidays, Visa, eSIM, and Policy modals
   useEffect(() => {
-    const validPages: PolicyPageType[] = [
+    const validPolicyPages: PolicyPageType[] = [
       'about',
       'contact',
       'disclaimer',
@@ -49,11 +85,12 @@ export default function App() {
       'baggage',
     ];
     const handleRouteSync = () => {
-      const queryPage = new URLSearchParams(window.location.search).get('page')?.toLowerCase();
-      const hash = window.location.hash.replace('#', '').toLowerCase() as PolicyPageType | 'holiday-bookings';
-      setIsHolidayPage(queryPage === 'holiday-bookings' || hash === 'holiday-bookings');
-      if (validPages.includes(hash as PolicyPageType)) {
+      setCurrentService(resolveServiceFromLocation());
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      if (validPolicyPages.includes(hash as PolicyPageType)) {
         setActivePage(hash as PolicyPageType);
+      } else {
+        setActivePage(null);
       }
     };
 
@@ -100,14 +137,20 @@ export default function App() {
       refund: 'Refund Policy | FlyFello',
       baggage: 'Baggage Information | FlyFello',
     };
-    if (isHolidayPage) {
-      document.title = 'Holiday Bookings | FlyFello';
+    if (activePage) {
+      document.title = pageTitles[activePage];
       return;
     }
-    document.title = activePage
-      ? pageTitles[activePage]
-      : 'FlyFello – Discounted USA & Canada to India Flights';
-  }, [activePage, isHolidayPage]);
+
+    const serviceTitles: Record<ServicePageType, string> = {
+      flights: 'FlyFello – Discounted USA & Canada to India Flights',
+      hotels: 'Hotels & Resorts Inquiry | FlyFello',
+      holidays: 'Holiday Bookings | FlyFello',
+      visa: 'Global Visa Assistance | FlyFello',
+      esim: 'International Travel eSIM | FlyFello',
+    };
+    document.title = serviceTitles[currentService];
+  }, [activePage, currentService]);
 
   const handleOpenPage = (page: PolicyPageType) => {
     setActivePage(page);
@@ -121,17 +164,11 @@ export default function App() {
     }
   };
 
-  const handleOpenHolidayBookings = () => {
-    window.history.pushState(null, '', '/?page=holiday-bookings');
+  const handleSelectService = (service: ServicePageType) => {
+    const nextPath = getPathForService(service);
+    window.history.pushState(null, '', nextPath);
     setActivePage(null);
-    setIsHolidayPage(true);
-    window.scrollTo({ top: 0 });
-  };
-
-  const handleBackToHome = () => {
-    window.history.pushState(null, '', '/');
-    setIsHolidayPage(false);
-    setActivePage(null);
+    setCurrentService(service);
     window.scrollTo({ top: 0 });
   };
 
@@ -139,34 +176,43 @@ export default function App() {
     setSearchParams(newParams);
   };
 
-  if (isHolidayPage) {
-    return <HolidayBookingsPage onBackToHome={handleBackToHome} />;
-  }
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
-      {/* Top Navigation Header & Air Suvidha Notice */}
+      {/* Top Navigation Header, 5-Service Icon Strip & Air Suvidha Notice */}
       <Header
+        activeService={currentService}
+        onSelectService={handleSelectService}
         onOpenPage={handleOpenPage}
-        onOpenHolidayBookings={handleOpenHolidayBookings}
+        onOpenHolidayBookings={() => handleSelectService('holidays')}
       />
 
-      {/* Main Content Sections */}
-      <main className="flex-1">
-        {/* Real-time Flight Search Engine with Globe & Flights Video Backdrop */}
-        <FlightSearch
-          onSearch={handleSearch}
-          currentParams={searchParams}
-        />
+      {/* Active Page Content */}
+      <main className="flex-1 flex flex-col">
+        {currentService === 'flights' && (
+          <>
+            <FlightSearch
+              onSearch={handleSearch}
+              currentParams={searchParams}
+            />
+            <TopInternationalDestinations onBackToHome={() => handleSelectService('flights')} />
+            <WhyFlyfello />
+            <Testimonials />
+            <InstagramSection />
+          </>
+        )}
 
-        {/* Why Flyfello Feature & Luggage Guarantee Showcase */}
-        <WhyFlyfello />
+        {currentService === 'hotels' && <HotelsPage />}
 
-        {/* Customer Testimonials & Verified Reviews */}
-        <Testimonials />
+        {currentService === 'holidays' && (
+          <HolidayBookingsPage
+            embedded
+            onBackToHome={() => handleSelectService('flights')}
+          />
+        )}
 
-        {/* Instagram Account & Posts Showcase */}
-        <InstagramSection />
+        {currentService === 'visa' && <VisaPage />}
+
+        {currentService === 'esim' && <EsimPage />}
       </main>
 
       {/* Footer with Visit Us (India), Company & Support Links */}
@@ -184,10 +230,8 @@ export default function App() {
       {/* Floating WhatsApp Support Button */}
       <WhatsAppFloatingButton />
 
-      {/* Cookie Consent Pop-up (Always opens on every page load) */}
+      {/* Cookie Consent Pop-up */}
       <CookieConsent onOpenPolicy={handleOpenPage} />
     </div>
   );
 }
-
-
